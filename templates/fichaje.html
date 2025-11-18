@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ⭐ NECESARIO EN MÓVIL -->
+
+
+        <!--
+        name="viewport" Le dice al navegador que vas a controlar el "viewport" (área visible de la página en pantalla).
+
+
+        content="width=device-width"
+        Establece que el ancho de la página debe coincidir con el ancho del dispositivo.
+        Sin esto, los navegadores móviles usan un ancho por defecto de unos 980px, lo que hace que tu diseño se vea pequeño o desajustado.
+
+        initial-scale=1.0"
+        Establece el nivel de zoom inicial al 100% (sin hacer zoom).
+        -->
+
+    
+    <title>Cronómetro - {{ username }}</title>
+
+    <a href="/admin" class="volver-btn">⬅ Volver</a>
+
+
+    <style>
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            padding: 20px;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+    
+        .volver-btn {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: background 0.3s;
+            margin: 15px;
+        }
+        .volver-btn:hover {
+            background-color: #5a6268;
+        }
+
+
+        .bienvenida-completa {
+            text-align: center;/* Centrar el texto */
+            background: white; /* Fondo blanco para el contenedor */
+            margin-top: 50px;/* Espacio superior */
+            padding: 30px;/* Espaciado interno */
+            padding: 0 20px; /* margen lateral para móviles */
+        }
+
+        .bienvenida-completa h1 {
+            font-size: 2em;/* Tamaño de fuente grande */
+            color: #333;/* Color de texto oscuro */
+            margin-bottom: 10px;/* Espacio inferior */
+        }
+
+        .usuario {
+            font-size: 1em;/* Tamaño de fuente normal */
+            color: #666;/* Color de texto gris */
+            margin-bottom: 15px;/* Espacio inferior */
+        }
+
+        .logout-btn {
+            background: #dc3545;/* Color de fondo rojo */
+            color: white;/* Color de texto blanco */
+            padding: 10px 20px;/* Espaciado interno */
+            text-decoration: none;/* Sin subrayado */
+            border-radius: 5px;/* Bordes redondeados */
+            font-size: 1em;/* Tamaño de fuente normal */
+            display: inline-block;/* Mostrar como bloque en línea */
+            transition: background 0.3s;/* Transición suave al pasar el ratón */
+        }
+
+        .logout-btn:hover {
+            background: #c82333;/* Color de fondo más oscuro al pasar el ratón */
+        }
+
+        /* Responsive para pantallas pequeñas */
+        @media (max-width: 768px) {/* Ajustes para móviles */
+            .bienvenida-completa h1 {/* Ajuste del tamaño de fuente */
+                font-size: 1.6em;/* Tamaño de fuente más pequeño */
+            }
+
+            .logout-btn {/* Ajuste del tamaño de botón */
+                font-size: 0.9em;/* Tamaño de fuente más pequeño */
+                padding: 8px 16px;/* Espaciado interno reducido */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bienvenida-completa">
+        <h1>¡Bienvenid@, {{ username.capitalize() }}!</h1>
+        <div class="usuario">{{ username }}</div>
+        <a href="/logout" class="logout-btn">Cerrar sesión</a>
+    </div>
+
+</body>
+</html>

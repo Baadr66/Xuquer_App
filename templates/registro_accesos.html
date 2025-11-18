@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ⭐ NECESARIO EN MÓVIL -->
+    
+    <title>Cronómetro - {{ username }}</title>
+
+    <a href="/admin" class="volver-btn">⬅ Volver</a> 
+
+    
+    <style>
+
+        .volver-btn {
+        display: inline-block;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        transition: background 0.3s;
+        margin: 15px;
+        }
+        .volver-btn:hover {
+            background-color: #5a6268;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;  /* ⭐ ahora se apilan en columna */
+            align-items: center;     /* centra horizontalmente */
+            justify-content: flex-start; /* empieza arriba, no en el centro vertical */
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        
+        @media (max-width: 768px) {/* Ajustes para móviles */
+            .bienvenida-completa h1 {/* Ajuste del tamaño de fuente */
+                font-size: 1.6em;/* Tamaño de fuente más pequeño */
+            }
+
+            .logout-btn {/* Ajuste del tamaño de botón */
+                font-size: 0.9em;/* Tamaño de fuente más pequeño */
+                padding: 8px 16px;/* Espaciado interno reducido */
+            }
+        }
+
+    .tabla-container {
+            width: 80%;
+            margin: 0 auto; /* centra la tabla en la página */
+            text-align: center;
+        }
+
+        .tabla-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabla-container th, .tabla-container td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+    </style>
+</head>
+
+
+    <div class="tabla-container">
+        <h2>Histórico de fichajes</h2>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for r in registros[:10] %}
+                <tr>
+                    <td>{{ r[0] }}</td>  
+                    <td>{{ r[1] }}</td>  
+                    <td>{{ r[2].strftime("%Y-%m-%d %H:%M:%S") }}</td>  
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+        <a href="/admin/export/pdf" target="_blank">📄 Exportar PDF</a>
+    </div>

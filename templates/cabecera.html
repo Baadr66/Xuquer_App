@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabeceras</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 10px; }
+
+        .header { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .volver-btn { background: #6c757d; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; }
+        .volver-btn:hover { background-color: #5a6268; }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #f2f2f2;
+            color: #555;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-save { background: #007bff; }
+        .btn-save:hover { background: #0056b3; }
+
+        .btn-delete { background: #dc3545; }
+        .btn-delete:hover { background: #c82333; }
+
+        .btn-add { background: #28a745; }
+        .btn-add:hover { background: #218838; }
+
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            th { display: none; }
+            td { border: none; border-bottom: 1px solid #eee; text-align: right; padding-left: 50%; position: relative; }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                width: 45%;
+                padding-left: 5px;
+                font-weight: bold;
+                text-align: left;
+                color: #555;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <a href="/admin" class="volver-btn">⬅ Volver</a>
+        <span style="margin-left: 15px; font-weight: bold;">{{ username.capitalize() }}</span>
+    </div>
+    
+    
+    
+    <div class="search-bar" style="margin-bottom: 15px;">
+        <input type="text" id="buscarCabeceras" placeholder="Buscar cabecera..." class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;">
+    </div>
+    
+    <div class="card">
+        <h2>Cabeceras de {{ username.capitalize() }}</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Referencia</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="contenedorCabeceras">
+                {% for cab in cabeceras %}
+                <tr>
+                    <td data-label="Referencia">
+                        <input type="text" form="form-{{ cab[0] }}" name="referencia" value="{{ cab[0] }}" readonly>
+                    </td>
+                    <td data-label="Tipo">
+                        <select name="tipo" form="form-{{ cab[0] }}" required>
+                            {% for tipo in tipos %}
+                                <option value="{{ tipo[0] }}" {% if tipo[0] == cab[1] %}selected{% endif %}>
+                                    {{ tipo[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td data-label="Acciones">
+                        <form id="form-{{ cab[0] }}" action="/actualizar_cab/{{ cab[0] }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-save">💾 Guardar</button>
+                        </form>
+                        <form action="/eliminar_cab/{{ cab[0] }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-delete">🗑 Eliminar</button>
+                        </form>
+                    </td>
+                {% endfor %}
+                </tr>
+            </tbody>
+        </table>            
+    </div>
+    
+    <div class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+        <!-- Fila para agregar nueva cabecera -->
+        
+        <table>
+            <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                <form id="form-agregar" action="/agregar_cab" method="post">
+                    <td data-label="Referencia">
+                        <input type="text" name="referencia" placeholder="Nueva referencia" required style="border: none;">
+                    </td>
+                    <td data-label="Tipo">
+                        <select name="tipo" required style="border: none;">
+                            <option value="" disabled selected>Selecciona un tipo</option>
+                            {% for tipo in tipos %}
+                                <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td data-label="Acciones">
+                        <button type="submit" class="btn btn-add">✅ Agregar</button>
+                    </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        const tipos = [
+            {% for tipo in tipos %}
+                { id: {{ tipo[0] }}, nombre: "{{ tipo[1] }}" },
+            {% endfor %}
+        ]; // Array de tipos convertido a JS
+
+        document.getElementById('buscarCabeceras').addEventListener('keyup', async function() {
+            const q = this.value.trim(); // Valor del input
+            const contenedor = document.getElementById('contenedorCabeceras');
+
+            // Mostrar mensaje mientras busca
+            contenedor.innerHTML = '<tr><td colspan="3">Buscando...</td></tr>';
+
+            try {
+                const response = await fetch(`/api/cabeceras?q=${encodeURIComponent(q)}`);
+                const data = await response.json();
+
+                if (!data.length) {
+                    contenedor.innerHTML = '<tr><td colspan="3">No se encontraron resultados.</td></tr>';
+                    return;
+                }
+
+                contenedor.innerHTML = '';
+
+                data.forEach(c => {
+                    // Construir opciones del select
+                    let opciones = `<option value="" disabled ${!c.id_tipo ? 'selected' : ''}>Selecciona un tipo</option>`;
+                    tipos.forEach(t => {
+                        const selected = (t.id == c.id_tipo) ? 'selected' : '';
+                        opciones += `<option value="${t.id}" ${selected}>${t.nombre}</option>`;
+                    });
+
+                    // Construir fila con formulario
+                    const fila = `
+                        <tr>
+                            <td data-label="Referencia">
+                                <input type="text" name="referencia" value="${c.referencia}" readonly>
+                            </td>
+                            <td data-label="Tipo">
+                                <select name="tipo" form="form-${c.referencia}" required>
+                                    ${opciones}
+                                </select>
+                            </td>
+                            <td data-label="Acciones">
+                                <form id="form-${c.referencia}" action="/actualizar_cab/${c.referencia}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-save">💾 Guardar</button>
+                                </form>
+                                <form action="/eliminar_cab/${c.referencia}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-delete">🗑 Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    `;
+
+                    contenedor.innerHTML += fila;
+                });
+
+            } catch (err) {
+                console.error("Error al buscar cabeceras:", err);
+                contenedor.innerHTML = '<tr><td colspan="3">Error al cargar los datos.</td></tr>';
+            }
+        });
+        </script>
+
+
+
+
+
+    
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Archivos de configuración sensibles
+.env
+.env.local
+config.h
+*.pyc
+__pycache__/
+
+# Archivos de sesión y logs
+flask_session/
+*.log
+
+# PDFs generados
+static/pdfs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Virtual environment
+venv/
+env/
+ENV/
