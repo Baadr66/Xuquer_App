@@ -19,6 +19,9 @@
             margin-bottom: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         h2 {
@@ -34,10 +37,15 @@
             background: #fff;
             border-radius: 8px;
             overflow: hidden;
+            table-layout: fixed;
+        }
+
+        .full-width {
+            max-width: 100%;
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             border-bottom: 1px solid #eee;
             text-align: center;
             vertical-align: middle;
@@ -46,10 +54,40 @@
         th {
             background: #f2f2f2;
             color: #555;
+            font-weight: 600;
+        }
+
+        /* Anchos simétricos de columnas */
+        th:nth-child(1), td:nth-child(1) { width: 60%; }
+        th:nth-child(2), td:nth-child(2) { width: 40%; }
+
+        td[data-label="Referencia"] form {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        td[data-label="Referencia"] input {
+            flex: 1;
+            max-width: 400px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 0.95em;
+        }
+
+        td[data-label="Acciones"] {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-left: 90px;
+
         }
 
         input[type="text"], select {
-            width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -64,6 +102,7 @@
             font-size: 0.9em;
             cursor: pointer;
             transition: background 0.3s;
+            white-space: nowrap;
         }
         .btn-save { background: #007bff; }
         .btn-save:hover { background: #0056b3; }
@@ -74,10 +113,53 @@
         .btn-add { background: #28a745; }
         .btn-add:hover { background: #218838; }
 
+        .search-bar {
+            margin-bottom: 15px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Tabla de agregar */
+        .add-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .add-card table {
+            background: transparent;
+        }
+
+        .add-card td {
+            border: none;
+        }
+
+        .add-card input {
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.9);
+        }
+
         @media (max-width: 600px) {
+            table { table-layout: auto; }
+            
             table, thead, tbody, th, td, tr { display: block; }
+            
             th { display: none; }
-            td { border: none; border-bottom: 1px solid #eee; text-align: right; padding-left: 50%; position: relative; }
+            
+            td { 
+                border: none; 
+                border-bottom: 1px solid #eee; 
+                text-align: right; 
+                padding: 10px 15px 10px 50%; 
+                position: relative; 
+                width: 100% !important;
+            }
+            
             td::before {
                 content: attr(data-label);
                 position: absolute;
@@ -87,6 +169,17 @@
                 font-weight: bold;
                 text-align: left;
                 color: #555;
+            }
+
+            td[data-label="Referencia"] form,
+            td[data-label="Acciones"] {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            td[data-label="Referencia"] input {
+                max-width: 100%;
             }
         }
     </style>
@@ -99,10 +192,8 @@
         <span style="margin-left: 15px; font-weight: bold;">{{ username.capitalize() }}</span>
     </div>
     
-    
-    
-    <div class="search-bar" style="margin-bottom: 15px;">
-        <input type="text" id="buscarCabeceras" placeholder="Buscar cabecera..." class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;">
+    <div class="search-bar">
+        <input type="text" id="buscarCabeceras" placeholder="Buscar cabecera..." class="form-control">
     </div>
     
     <div class="card">
@@ -112,7 +203,6 @@
             <thead>
                 <tr>
                     <th>Referencia</th>
-                    <th>Tipo</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -120,132 +210,77 @@
                 {% for cab in cabeceras %}
                 <tr>
                     <td data-label="Referencia">
-                        <input type="text" form="form-{{ cab[0] }}" name="referencia" value="{{ cab[0] }}" readonly>
-                    </td>
-                    <td data-label="Tipo">
-                        <select name="tipo" form="form-{{ cab[0] }}" required>
-                            {% for tipo in tipos %}
-                                <option value="{{ tipo[0] }}" {% if tipo[0] == cab[1] %}selected{% endif %}>
-                                    {{ tipo[1] }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td data-label="Acciones">
-                        <form id="form-{{ cab[0] }}" action="/actualizar_cab/{{ cab[0] }}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-save">💾 Guardar</button>
-                        </form>
-                        <form action="/eliminar_cab/{{ cab[0] }}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-delete">🗑 Eliminar</button>
+                        <form id="form-{{ cab[0] }}" action="/actualizar_cab/{{ cab[0] }}" method="post">
+                            <input type="text" name="referencia" value="{{ cab[0] }}">
                         </form>
                     </td>
-                {% endfor %}
+
+                    <td data-label="Acciones" class="center-content">
+                        <button type="submit" form="form-{{ cab[0] }}" class="btn btn-save">💾 Guardar</button>
+                        <button type="submit" form="form-{{ cab[0] }}" formaction="/eliminar_cab/{{ cab[0] }}" formmethod="post" class="btn btn-delete">🗑 Eliminar</button>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>            
     </div>
     
-    <div class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
-        <!-- Fila para agregar nueva cabecera -->
-        
+    <div class="card add-card">
         <table>
-            <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
-                <form id="form-agregar" action="/agregar_cab" method="post">
-                    <td data-label="Referencia">
-                        <input type="text" name="referencia" placeholder="Nueva referencia" required style="border: none;">
-                    </td>
-                    <td data-label="Tipo">
-                        <select name="tipo" required style="border: none;">
-                            <option value="" disabled selected>Selecciona un tipo</option>
-                            {% for tipo in tipos %}
-                                <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td data-label="Acciones">
-                        <button type="submit" class="btn btn-add">✅ Agregar</button>
-                    </td>
-                </form>
+            <tr>
+                <td data-label="Referencia">
+                    <form id="form-agregar" action="/agregar_cab" method="post" style="display: flex; gap: 8px; width: 100%; align-items: center; justify-content: center;">
+                        <input type="text" name="referencia" placeholder="Nueva referencia" required style="flex: 1; max-width: 400px;">
+                    </form>
+                </td>
+                <td data-label="Acciones">
+                    <button type="submit" form="form-agregar" class="btn btn-add">✅ Agregar</button>
+                </td>
             </tr>
         </table>
     </div>
 
     <script>
-        const tipos = [
-            {% for tipo in tipos %}
-                { id: {{ tipo[0] }}, nombre: "{{ tipo[1] }}" },
-            {% endfor %}
-        ]; // Array de tipos convertido a JS
-
         document.getElementById('buscarCabeceras').addEventListener('keyup', async function() {
-            const q = this.value.trim(); // Valor del input
+            const q = this.value.trim();
             const contenedor = document.getElementById('contenedorCabeceras');
 
-            // Mostrar mensaje mientras busca
-            contenedor.innerHTML = '<tr><td colspan="3">Buscando...</td></tr>';
+            contenedor.innerHTML = '<tr><td colspan="2">Buscando...</td></tr>';
 
             try {
                 const response = await fetch(`/api/cabeceras?q=${encodeURIComponent(q)}`);
                 const data = await response.json();
 
                 if (!data.length) {
-                    contenedor.innerHTML = '<tr><td colspan="3">No se encontraron resultados.</td></tr>';
+                    contenedor.innerHTML = '<tr><td colspan="2">No se encontraron resultados.</td></tr>';
                     return;
                 }
 
                 contenedor.innerHTML = '';
 
                 data.forEach(c => {
-                    // Construir opciones del select
-                    let opciones = `<option value="" disabled ${!c.id_tipo ? 'selected' : ''}>Selecciona un tipo</option>`;
-                    tipos.forEach(t => {
-                        const selected = (t.id == c.id_tipo) ? 'selected' : '';
-                        opciones += `<option value="${t.id}" ${selected}>${t.nombre}</option>`;
-                    });
-
-                    // Construir fila con formulario
                     const fila = `
-                        <tr>
-                            <td data-label="Referencia">
-                                <input type="text" name="referencia" value="${c.referencia}" readonly>
-                            </td>
-                            <td data-label="Tipo">
-                                <select name="tipo" form="form-${c.referencia}" required>
-                                    ${opciones}
-                                </select>
-                            </td>
-                            <td data-label="Acciones">
-                                <form id="form-${c.referencia}" action="/actualizar_cab/${c.referencia}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-save">💾 Guardar</button>
-                                </form>
-                                <form action="/eliminar_cab/${c.referencia}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-delete">🗑 Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td data-label="Referencia">
+                            <form id="form-${c.referencia}" action="/actualizar_cab/${c.referencia}" method="post">
+                                <input type="text" name="referencia" value="${c.referencia}">
+                            </form>
+                        </td>
+                        <td data-label="Acciones">
+                            <button type="submit" form="form-${c.referencia}" class="btn btn-save">💾 Guardar</button>
+                            <button type="submit" form="form-${c.referencia}" formaction="/eliminar_cab/${c.referencia}" formmethod="post" class="btn btn-delete">🗑 Eliminar</button>
+                        </td>
+                    </tr>
                     `;
-
                     contenedor.innerHTML += fila;
                 });
 
             } catch (err) {
                 console.error("Error al buscar cabeceras:", err);
-                contenedor.innerHTML = '<tr><td colspan="3">Error al cargar los datos.</td></tr>';
+                contenedor.innerHTML = '<tr><td colspan="2">Error al cargar los datos.</td></tr>';
             }
         });
-        </script>
-
-
-
-
-
-    
-
-
-
-
-
-
+    </script>
 
 </body>
 </html>

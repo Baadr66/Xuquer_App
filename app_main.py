@@ -262,12 +262,8 @@ def cabeceras():
     cursor = em.database.cursor()
     sql = """
         SELECT 
-        infocab.referencia,
-        infocab.id_tipo,
-        infotipo.nombre
+        infocab.referencia
         FROM public.infocab
-        INNER JOIN public.infotipo
-        ON infocab.id_tipo = infotipo.id
         ORDER BY infocab.referencia ASC;
     """
 
@@ -276,15 +272,13 @@ def cabeceras():
     cursor.close()
 
     cursor = em.database.cursor()
-    cursor.execute("SELECT * FROM public.infocab;")
+    cursor.execute("SELECT infocab.referencia FROM public.infocab;")
     rows = cursor.fetchall()
     print("Infocab:", rows)
 
-    cursor.execute("SELECT id, nombre FROM public.infotipo ORDER BY id ASC;")
-    tipos = cursor.fetchall()
     cursor.close()
 
-    return render_template('cabecera.html', tipos=tipos, cabeceras=cabeceras, username=session.get('current_user'))
+    return render_template('cabecera.html', cabeceras=cabeceras, username=session.get('current_user'))
 
 
 @app.route('/api/cabeceras', methods=['GET'])
@@ -292,48 +286,56 @@ def cabeceras():
 def api_cabeceras():
     if not session.get('authenticated') or session.get('rol') != 'admin':
         return jsonify({'error': 'No autorizado'}), 403
-    
-    filtro = request.args.get('q', '').strip().lower()
-    cursor = em.database.cursor()
+    try:
+        filtro = request.args.get('q', '').strip().lower()
+        cursor = em.database.cursor()
 
-    if filtro:
-        sql = """
-            SELECT 
-                infocab.referencia, infocab.id_tipo, infotipo.nombre
-            FROM public.infocab
-            INNER JOIN public.infotipo ON infocab.id_tipo = infotipo.id
-            WHERE LOWER(infocab.referencia) LIKE %s OR LOWER(infotipo.nombre) LIKE %s
-            ORDER BY infocab.id_tipo ASC;
-        """
-        cursor.execute(sql, (f'%{filtro}%', f'%{filtro}%'))
-    else:
-        sql = """
-            SELECT 
-                infocab.referencia, infocab.id_tipo, infotipo.nombre
-            FROM public.infocab
-            INNER JOIN public.infotipo ON infocab.id_tipo = infotipo.id
-            ORDER BY infocab.id_tipo ASC;
-        """
-        cursor.execute(sql)
-    cabeceras = cursor.fetchall()
-    cursor.close()
+        if filtro:
+            sql = """
+                SELECT 
+                    infocab.referencia
+                FROM public.infocab
+                WHERE LOWER(infocab.referencia) LIKE %s
+                ORDER BY infocab.referencia ASC;
+            """
+            cursor.execute(sql, (f'%{filtro}%',))
+        else:
+            sql = """
+                SELECT 
+                    infocab.referencia
+                FROM public.infocab
+                ORDER BY infocab.referencia ASC;
+            """
+            cursor.execute(sql)
+        
+        cabeceras = cursor.fetchall()
+
+    except Exception as e:
+        em.database.rollback()  # <--
+        print(f"Error al obtener cabeceras: {e}")
+        return jsonify({'error': 'Error al obtener cabeceras'}), 500
+        
+    finally:
+        cursor.close()
+    
     data = [{
-        'referencia': c[0],
-        'id_tipo': c[1],
-        'tipo_nombre': c[2]
+        'referencia': c[0]
     } for c in cabeceras]
     return jsonify(data)
 
 @app.route('/actualizar_cab/<referencia>', methods=['POST'])
 def actualizar_cab(referencia):
-    tipo = request.form.get('tipo')
-    print(f"Referencia: {referencia}, Tipo: {tipo}")
+    nuevo_valor = request.form.get('referencia') 
+    print(f"Referencia original: {referencia}, Nuevo valor: {nuevo_valor}")
+    
     cursor = em.database.cursor()
-    sql = "UPDATE public.infocab SET id_tipo = %s WHERE referencia = %s;"
-    cursor.execute(sql, (tipo, referencia))
+    sql = "UPDATE public.infocab SET referencia = %s WHERE referencia = %s;"
+    cursor.execute(sql, (nuevo_valor, referencia))  # <- aquí usamos el nuevo valor
     em.database.commit()
     cursor.close()
+    
     return redirect(url_for('cabeceras'))
+
 
 @app.route('/eliminar_cab/<referencia>', methods=['POST'])
 def eliminar_cab(referencia):
@@ -354,29 +356,28 @@ def eliminar_cab(referencia):
 def agregar_cab():
     if not session.get('authenticated') or session.get('rol') != 'admin':
         return jsonify({'error': 'No autorizado'}), 403
-    tipo = request.form.get('tipo')
+
     referencia = request.form.get('referencia')
-    print(f"Referencia: {referencia}, Tipo: {tipo}")
     cursor = em.database.cursor()
-    sql= "SELECT infocab.referencia FROM public.infocab"
-    cursor.execute(sql)
-    em.database.commit()
-    referencias = cursor.fetchall()
-    print(referencias)
-    
-    for ref in referencias:
-        if ref[0] == referencia:
+
+    try:
+        # Verificar si ya existe
+        cursor.execute("SELECT referencia FROM public.infocab WHERE referencia = %s", (referencia,))
+        if cursor.fetchone():
             return redirect(url_for('cabeceras', error=f"La referencia {referencia} ya está registrada."))
- 
-    
-    sql= """
-            INSERT INTO public.infocab (referencia,id_tipo)
-            VALUES (%s,%s)
-        """
-    cursor.execute(sql,(referencia,tipo))
-    em.database.commit()
-    cursor.close()
+
+        # Insertar nuevo registro
+        cursor.execute("INSERT INTO public.infocab (referencia, id_tipo) VALUES (%s, %s)", (referencia, 1))
+        em.database.commit()
+    except Exception as e:
+        em.database.rollback()  # <- muy importante
+        print(f"Error al agregar la cabecera: {e}")
+        return f"Error al agregar la cabecera: {e}", 500
+    finally:
+        cursor.close()
+
     return redirect(url_for('cabeceras'))
+
 
 
 
@@ -853,4 +854,4 @@ def logout():
 
 # ---------------- RUN ----------------
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4000, debug=False)
+    app.run(host='0.0.0.0', port=4000, debug=True)
