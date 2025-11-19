@@ -113,6 +113,9 @@
         .btn-add { background: #28a745; }
         .btn-add:hover { background: #218838; }
 
+        .btn-seemore { background: #73878a; }
+        .btn-seemore:hover { background: #73878a; }
+
         .search-bar {
             margin-bottom: 15px;
         }
@@ -216,6 +219,7 @@
                     </td>
 
                     <td data-label="Acciones" class="center-content">
+                        <button type="submit" form="form-{{ cab[0] }}" formaction="/ver_mas_detalle/{{ cab[0] }}" formmethod="post" class="btn btn-seemore"> Ver más</button>
                         <button type="submit" form="form-{{ cab[0] }}" class="btn btn-save">💾 Guardar</button>
                         <button type="submit" form="form-{{ cab[0] }}" formaction="/eliminar_cab/{{ cab[0] }}" formmethod="post" class="btn btn-delete">🗑 Eliminar</button>
                     </td>
@@ -267,6 +271,7 @@
                             </form>
                         </td>
                         <td data-label="Acciones">
+                            <button type="submit" form="form-${c.referencia}" formaction="/ver_mas_detalle/${c.referencia}" formmethod="post" class="btn btn-seemore"> Ver más</button>
                             <button type="submit" form="form-${c.referencia}" class="btn btn-save">💾 Guardar</button>
                             <button type="submit" form="form-${c.referencia}" formaction="/eliminar_cab/${c.referencia}" formmethod="post" class="btn btn-delete">🗑 Eliminar</button>
                         </td>

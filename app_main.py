@@ -339,13 +339,25 @@ def actualizar_cab(referencia):
 
 @app.route('/eliminar_cab/<referencia>', methods=['POST'])
 def eliminar_cab(referencia):
-    print(f"Referencia del Eliminado: {referencia}")
     cursor = em.database.cursor()
-    sql = "DELETE FROM public.infocab WHERE referencia = %s;"
-    cursor.execute(sql, (referencia,))
-    em.database.commit()
+    
+    # Obtener el id de la cabecera
+    cursor.execute("SELECT id FROM public.infocab WHERE referencia = %s", (referencia,))
+    cab = cursor.fetchone()
+    
+    if cab:
+        id_cab = cab[0]
+        
+        # Borrar los detalles asociados primero
+        cursor.execute("DELETE FROM public.infodet WHERE id_infocab = %s", (id_cab,))
+        
+        # Luego borrar la cabecera
+        cursor.execute("DELETE FROM public.infocab WHERE id = %s", (id_cab,))
+        em.database.commit()
+    
     cursor.close()
     return redirect(url_for('cabeceras'))
+
 
 '''
 @app.route('/guardar/<int:id>', methods=['POST'])
@@ -367,7 +379,7 @@ def agregar_cab():
             return redirect(url_for('cabeceras', error=f"La referencia {referencia} ya está registrada."))
 
         # Insertar nuevo registro
-        cursor.execute("INSERT INTO public.infocab (referencia, id_tipo) VALUES (%s, %s)", (referencia, 1))
+        cursor.execute("INSERT INTO public.infocab (referencia) VALUES (%s)", (referencia,))
         em.database.commit()
     except Exception as e:
         em.database.rollback()  # <- muy importante
@@ -385,7 +397,63 @@ def agregar_cab():
 
 ###########DETALLES##########
 
+@app.route('/detalle_2/<referencia>')
+@login_required
+def detalle_2(referencia):
+    if session.get('rol') != 'admin':
+        return redirect('/home')
 
+    cursor = em.database.cursor()
+    
+    # Obtener los detalles filtrados por referencia
+    sql_detalles = """
+        SELECT 
+        infodet.id,
+        infodet.id_tipo,
+        infodet.referencia,
+        infodet.desc1,
+        infodet.desc2,
+        infodet.notas,
+        infocab.referencia,
+        infodet.id_infocab,
+		infotipo.nombre
+        FROM public.infodet
+        INNER JOIN public.infocab 
+            ON infodet.id_infocab = infocab.id
+        INNER JOIN public.infotipo 
+            ON infodet.id_tipo = infotipo.id
+        WHERE infocab.referencia = %s
+        ORDER BY infocab.referencia ASC;
+
+    """
+    cursor.execute(sql_detalles, (referencia,))
+    detalles = cursor.fetchall()
+
+    # Obtener todas las referencias para el select
+    cursor.execute("SELECT id,nombre FROM public.infotipo ORDER BY id ASC;")
+    referencias = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template(
+            'detalle_2.html',
+            detalles=detalles,
+            referencias=referencias,
+            referencia=referencia,   # <-- este es el cambio clave
+            username=session.get('current_user')
+        )
+
+@app.route('/ver_mas_detalle/<referencia>', methods=['GET','POST'])
+@login_required
+def ver_mas_detalle(referencia):
+    if session.get('rol') != 'admin':
+        return redirect('/home')
+
+    # Redirigir a la ruta que muestra los detalles filtrados
+    return redirect(url_for('detalle_2', referencia=referencia))
+
+
+'''
 @app.route('/detalle')
 def detalles():
     print("Accediendo a /detalles")
@@ -411,7 +479,7 @@ def detalles():
         cursor.execute(sql)
         detalles = cursor.fetchall()
 
-        sql = "SELECT id, referencia FROM public.infocab ORDER BY id ASC"
+        sql = "SELECT id,nombre FROM public.infotipo ORDER BY id ASC"
         cursor.execute(sql)
         referencias = cursor.fetchall()
 
@@ -425,7 +493,7 @@ def detalles():
 
     return render_template('detalle.html', detalles=detalles, username=session.get('current_user'), referencias=referencias)
 
-
+'''
 ##Buscador de detalles.
 
 @app.route('/api/detalles', methods=['GET'])
@@ -435,63 +503,67 @@ def api_detalles():
         return jsonify({'error': 'No autorizado'}), 403
 
     filtro = request.args.get('q', '').strip().lower()
+    id_infocab = request.args.get('id_infocab', type=int)  # <-- recibimos el id actual
     cursor = em.database.cursor()
 
-    if filtro:
-        sql = """
-            SELECT 
-                infodet.id,
-                infodet.id_infocab,
-                infodet.referencia,
-                infodet.desc1,
-                infodet.desc2,
-                infodet.notas,
-                infocab.referencia
-            FROM public.infodet
-            INNER JOIN public.infocab ON infodet.id_infocab = infocab.id
-            WHERE LOWER(infocab.referencia) LIKE %s OR LOWER(infodet.referencia) LIKE %s
-            ORDER BY infocab.referencia ASC;
-        """
-        cursor.execute(sql, (f'%{filtro}%', f'%{filtro}%'))
-    else:
-        sql = """
-            SELECT 
-                infodet.id, infodet.id_infocab, infodet.referencia,
-                infodet.desc1, infodet.desc2, infodet.notas, infocab.referencia
-            FROM public.infodet
-            INNER JOIN public.infocab ON infodet.id_infocab = infocab.id
-            ORDER BY infocab.referencia ASC;
-        """
-        cursor.execute(sql)
+    base_sql = """
+        SELECT 
+            infodet.id,
+            infodet.id_tipo,
+            infodet.referencia,
+            infodet.desc1,
+            infodet.desc2,
+            infodet.notas,
+            infocab.referencia,
+            infotipo.nombre
+        FROM public.infodet
+        INNER JOIN public.infocab ON infodet.id_infocab = infocab.id
+        INNER JOIN public.infotipo ON infodet.id_tipo = infotipo.id
+        WHERE infodet.id_infocab = %s
+    """
 
+    params = [id_infocab]
+
+    if filtro:
+        base_sql += " AND (LOWER(infocab.referencia) LIKE %s OR LOWER(infodet.referencia) LIKE %s OR LOWER(infotipo.nombre) LIKE %s)"
+        filtro_param = f'%{filtro}%'
+        params.extend([filtro_param, filtro_param, filtro_param])
+
+    base_sql += " ORDER BY infocab.referencia ASC;"
+
+    cursor.execute(base_sql, tuple(params))
     detalles = cursor.fetchall()
     cursor.close()
 
     data = [{
         'id': d[0],
-        'id_infocab': d[1],
+        'id_infotipo': d[1],
         'referencia': d[2],
         'desc1': d[3],
         'desc2': d[4],
         'notas': d[5],
-        'infocab_ref': d[6]
+        'infocab_ref': d[6],
+        'nombre_infotipo': d[7]
     } for d in detalles]
 
     return jsonify(data)
+
+
 
 
 @app.route('/actualizar_det/<int:id>', methods=['POST'])
 def actualizar_det(id):
     try:
         # Obtener datos del formulario
-        id_infocab_ref = request.form.get('id_infocab')
+        id_infotipo_ref = request.form.get('id_infotipo')
         referencia = request.form.get('referencia')
         desc1 = request.form.get('desc1')
         desc2 = request.form.get('desc2')
         notas = request.form.get('notas')
+        id_infocab_ref = request.form.get('id_infocab')
 
         cursor = em.database.cursor()
-        cursor.execute("SELECT id, referencia FROM public.infocab WHERE referencia = %s;", (id_infocab_ref,))
+        cursor.execute("SELECT id, referencia FROM public.infocab WHERE id = %s;", (id_infocab_ref,))
         infocab_data = cursor.fetchone()
         cursor.close()
 
@@ -508,15 +580,15 @@ def actualizar_det(id):
         cursor = em.database.cursor()
         sql = """
             UPDATE public.infodet 
-            SET id_infocab = %s, referencia = %s, desc1 = %s, desc2 = %s, notas = %s
+            SET id_tipo = %s, referencia = %s, desc1 = %s, desc2 = %s, notas = %s, id_infocab = %s
             WHERE id = %s;
         """
-        cursor.execute(sql, (id_infocab_real, referencia, desc1, desc2, notas, id))
+        cursor.execute(sql, (id_infotipo_ref, referencia, desc1, desc2, notas,id_infocab_real, id))
         em.database.commit()
         cursor.close()
 
         print("Registro actualizado correctamente.")
-        return redirect(url_for('detalles'))
+        return redirect(url_for('detalle_2', referencia=infocab_data[1]))
 
     except Exception as e:
         em.database.rollback()
@@ -527,16 +599,31 @@ def actualizar_det(id):
 
 
 
-
-@app.route('/eliminar_det/<id>', methods=['POST'])
+@app.route('/eliminar_det/<int:id>', methods=['POST'])
 def eliminar_det(id):
-    print(f"ID del Eliminado: {id}")
+    if not session.get('authenticated') or session.get('rol') != 'admin':
+        return redirect('/home')
+    
+    id_infocab_ref = request.form.get('id_infocab')
+    if not id_infocab_ref:
+        return "Error: no se proporcionó id_infocab", 400
+
     cursor = em.database.cursor()
-    sql = "DELETE FROM public.infodet WHERE id = %s;"
-    cursor.execute(sql, (id,))
+    cursor.execute("SELECT id, referencia FROM public.infocab WHERE id = %s;", (id_infocab_ref,))
+    infocab_data = cursor.fetchone()
+    
+    if not infocab_data:
+        cursor.close()
+        return f"Error: No existe un infocab con id {id_infocab_ref}", 404
+    
+    onanem = infocab_data[1]
+
+    cursor.execute("DELETE FROM public.infodet WHERE id = %s;", (id,))
     em.database.commit()
     cursor.close()
-    return redirect(url_for('detalles'))
+
+    return redirect(url_for('detalle_2', referencia=onanem))
+
 
 @app.route('/agregar_det', methods=['POST'])
 def agregar_det():
@@ -544,27 +631,40 @@ def agregar_det():
         return redirect('/home')
 
     try:
-        id_infocab_real = int(request.form.get('id_infocab'))
+        id_infotipo = request.form.get('id_infotipo')
         referencia = request.form.get('referencia')
-        desc1 = request.form.get('desc1')
-        desc2 = request.form.get('desc2')
-        notas = request.form.get('notas')
+        desc1 = request.form.get('desc1', '')
+        desc2 = request.form.get('desc2', '')
+        notas = request.form.get('notas', '')
+
+        cursor = em.database.cursor()
+        cursor.execute("SELECT id, referencia FROM public.infocab WHERE id = %s;", (request.form.get('id_infotipo'),))
+        infocab_data = cursor.fetchone()
+        cursor.close()
+
+        if infocab_data:
+            id_infocab_real = infocab_data[0]
+        else:
+            print(f"⚠️ No se encontró un infocab con id {request.form.get('id_infotipo')}")
+            id_infocab_real = None
+
+        if id_infocab_real is None:
+            return f"Error: No existe un infocab con id '{request.form.get('id_infotipo')}'", 400
 
         cursor = em.database.cursor()
         sql = """
-            INSERT INTO public.infodet (id_infocab, referencia, desc1, desc2, notas)
-            VALUES (%s, %s, %s, %s, %s);
+            INSERT INTO public.infodet (id_tipo, referencia, desc1, desc2, notas, id_infocab)
+            VALUES (%s, %s, %s, %s, %s, %s);
         """
-        cursor.execute(sql, (id_infocab_real, referencia, desc1, desc2, notas))
+        cursor.execute(sql, (id_infotipo, referencia, desc1, desc2, notas, id_infocab_real))
         em.database.commit()
         cursor.close()
 
-        return redirect(url_for('detalles'))
-
+        return redirect(url_for('detalle_2', referencia=infocab_data[1]))
     except Exception as e:
         em.database.rollback()
-        print(f"Error al agregar el registro: {e}")
-        return f"Error al agregar el registro: {e}", 500
+        print(f"Error al agregar el detalle: {e}")
+        return f"Error al agregar el detalle: {e}", 500
 
 
 

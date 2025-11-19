@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 10px; }
+
+        .header { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .volver-btn { background: #6c757d; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; transition: 0.3s; }
+        .volver-btn:hover { background: #5a6268; }
+
+        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card-title { font-size: 0.9em; color: #666; margin-bottom: 10px; }
+
+        .footer { background: #fff; padding: 15px; border-radius: 8px; margin-top: 20px; }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+        }
+
+        textarea { min-height: 60px; }
+
+        .extra { display: none; }
+        .extra.show { display: block; }
+
+        .btn { width: 100%; padding: 12px; margin-bottom: 8px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; color: white; transition: 0.3s; }
+        .btn:hover { opacity: 0.8; }
+        .btn-toggle { background: #28a745; }
+        .btn-save { background: #007bff; }
+        .btn-delete { background: #dc3545; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="/cabecera" class="volver-btn">⬅ Volver</a>
+        <strong>{{ username.capitalize() }}</strong>
+    </div>
+
+    <!-- Texto indicando la cabecera actual -->
+    <div class="card" style="background: #e9ecef; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+        <strong>Cabecera actual:</strong> {{ referencia }}
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="searchDetalles" placeholder="Buscar detalle..." class="form-control" />
+    </div>
+
+    <div id="contenedorCards" data-infocab="{{ detalles[0][7] if detalles else '' }}">
+
+
+    <div id="contenedorCards" data-infocab="{{ detalles[0][7] if detalles else '' }}">
+        {% for det in detalles %}
+        <div class="card">
+            <div class="card-title">
+                Registro #{{ det[0] }} — <strong>{{ det[6] }}</strong>
+            </div>
+
+            <form id="form-{{ det[0] }}" action="/actualizar_det/{{ det[0] }}" method="post">
+                <select name="id_infotipo" required>
+                    {% for ref in referencias %}
+                        <option value="{{ ref[0] }}" {% if ref[0] == det[1] %}selected{% endif %}>{{ ref[1] }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="referencia" value="{{ det[2] }}" placeholder="Referencia" required>
+                <input type="text" name="id_infocab" value="{{ det[7] }}" placeholder="ID Infocab" required>
+                <div class="extra" id="extra-{{ det[0] }}">
+                    <textarea name="desc1" placeholder="Descripción 1">{{ det[3] }}</textarea>
+                    <textarea name="desc2" placeholder="Descripción 2">{{ det[4] }}</textarea>
+                    <textarea name="notas" placeholder="Notas">{{ det[5] }}</textarea>
+                </div>
+
+                <button type="button" class="btn btn-toggle" onclick="toggle({{ det[0] }}, this)">🔽 Ver más</button>
+                <button type="submit" class="btn btn-save">💾 Guardar</button>
+                <button type="button" class="btn btn-delete" onclick="eliminar({{ det[0] }})">🗑 Eliminar</button>
+            </form>
+
+            <form id="del-{{ det[0] }}" action="/eliminar_det/{{ det[0] }}" method="post" style="display:none;">
+                <input type="hidden" name="id_infocab" value="{{ det[7] }}">
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="footer" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+        <div class="card-title" style="color:white;">➕ Nuevo Registro</div>
+        <form action="/agregar_det" method="post">
+
+            <select name="id_infotipo" required>
+                <option value="" disabled selected>Selecciona un ID Infotipo</option>
+                {% for ref in referencias %}
+                    <option value="{{ ref[0] }}">{{ ref[1] }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="referencia" placeholder="Referencia" required>
+            <textarea name="desc1" placeholder="Descripción 1"></textarea>
+            <textarea name="desc2" placeholder="Descripción 2"></textarea>
+            <textarea name="notas" placeholder="Notas"></textarea>
+
+            <button type="submit" class="btn" style="background:#28a745;">✅ Agregar</button>
+        </form>
+    </div>
+
+    <script>
+        const tipos = [
+            {% for ref in referencias %}
+                { id: "{{ ref[0] }}", nombre: "{{ ref[1] }}" },
+            {% endfor %}
+        ];
+
+        function toggle(id, btn) {
+            const extra = document.getElementById("extra-" + id);
+            extra.classList.toggle("show");
+            btn.textContent = extra.classList.contains("show") ? "🔼 Ocultar" : "🔽 Ver más";
+        }
+
+        function eliminar(id) {
+            if (confirm("¿Eliminar este registro?")) {
+                document.getElementById("del-" + id).submit();
+            }
+        }
+
+        document.getElementById("searchDetalles").addEventListener("keyup", async function () {
+            const q = this.value.trim();
+            const contenedor = document.getElementById("contenedorCards");
+            const id_infocab_actual = contenedor.dataset.infocab;
+            contenedor.innerHTML = "<p>Buscando...</p>";
+
+            const response = await fetch(`/api/detalles?q=${encodeURIComponent(q)}&id_infocab=${id_infocab_actual}`);
+            const data = await response.json();
+
+            if (!data.length) {
+                contenedor.innerHTML = "<p>No se encontraron resultados.</p>";
+                return;
+            }
+
+            contenedor.innerHTML = "";
+            data.forEach(d => {
+                let options = tipos.map(t => {
+                let selected = t.id == d.id_infotipo ? "selected" : "";
+                return `<option value="${t.id}" ${selected}>${t.nombre}</option>`;
+            }).join("");
+
+            let card = `
+            <div class="card">
+                <div class="card-title">
+                    Registro #${d.id} — <strong>${d.infocab_ref}</strong>
+                </div>
+
+                <form id="form-${d.id}" action="/actualizar_det/${d.id}" method="post">
+                    <select name="id_infotipo" required>
+                        ${options}
+                    </select>
+
+                    <input type="text" name="referencia" value="${d.referencia}" placeholder="Referencia" required>
+                    <input type="hidden" name="id_infocab" value="${d.id_infocab}">
+
+                    <div class="extra" id="extra-${d.id}">
+                        <textarea name="desc1">${d.desc1 || ""}</textarea>
+                        <textarea name="desc2">${d.desc2 || ""}</textarea>
+                        <textarea name="notas">${d.notas || ""}</textarea>
+                    </div>
+
+                    <button type="button" class="btn btn-toggle" onclick="toggle(${d.id}, this)">🔽 Ver más</button>
+                    <button type="submit" class="btn btn-save">💾 Guardar</button>
+                    <button type="button" class="btn btn-delete" onclick="eliminar(${d.id})">🗑 Eliminar</button>
+                </form>
+
+                <form id="del-${d.id}" action="/eliminar_det/${d.id}" method="post" style="display:none;"></form>
+            </div>
+            `;
+            contenedor.innerHTML += card;
+
+            });
+
+        });
+    </script>
+
+</body>
+</html>
