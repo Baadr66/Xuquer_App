@@ -632,40 +632,35 @@ def agregar_det():
 
     try:
         id_infotipo = request.form.get('id_infotipo')
-        referencia = request.form.get('referencia')
+        referencia = request.form.get('referencia')  # referencia del DETALLE
         desc1 = request.form.get('desc1', '')
         desc2 = request.form.get('desc2', '')
         notas = request.form.get('notas', '')
+        id_infocab_real = request.form.get('id_infocab')  # ESTE ES EL QUE DEBES USAR
 
         cursor = em.database.cursor()
-        cursor.execute("SELECT id, referencia FROM public.infocab WHERE id = %s;", (request.form.get('id_infotipo'),))
-        infocab_data = cursor.fetchone()
+        cursor.execute("SELECT referencia FROM public.infocab WHERE id = %s;", (id_infocab_real,))
+        referncia_cab = cursor.fetchone()
         cursor.close()
 
-        if infocab_data:
-            id_infocab_real = infocab_data[0]
-        else:
-            print(f"⚠️ No se encontró un infocab con id {request.form.get('id_infotipo')}")
-            id_infocab_real = None
-
-        if id_infocab_real is None:
-            return f"Error: No existe un infocab con id '{request.form.get('id_infotipo')}'", 400
+        if not id_infocab_real:
+            return "Error: id_infocab no recibido", 400
 
         cursor = em.database.cursor()
         sql = """
             INSERT INTO public.infodet (id_tipo, referencia, desc1, desc2, notas, id_infocab)
-            VALUES (%s, %s, %s, %s, %s, %s);
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
         cursor.execute(sql, (id_infotipo, referencia, desc1, desc2, notas, id_infocab_real))
         em.database.commit()
         cursor.close()
 
-        return redirect(url_for('detalle_2', referencia=infocab_data[1]))
+        return redirect(url_for('detalle_2', referencia=referncia_cab[0]))
+
     except Exception as e:
         em.database.rollback()
         print(f"Error al agregar el detalle: {e}")
         return f"Error al agregar el detalle: {e}", 500
-
 
 
 
