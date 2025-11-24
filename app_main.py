@@ -453,7 +453,7 @@ def ver_mas_detalle(referencia):
     return redirect(url_for('detalle_2', referencia=referencia))
 
 
-'''
+
 @app.route('/detalle')
 def detalles():
     print("Accediendo a /detalles")
@@ -493,7 +493,7 @@ def detalles():
 
     return render_template('detalle.html', detalles=detalles, username=session.get('current_user'), referencias=referencias)
 
-'''
+ 
 ##Buscador de detalles.
 
 @app.route('/api/detalles', methods=['GET'])
@@ -502,36 +502,46 @@ def api_detalles():
     if not session.get('authenticated') or session.get('rol') != 'admin':
         return jsonify({'error': 'No autorizado'}), 403
 
+    referencia_filtro = request.args.get('referencia', '').strip()
     filtro = request.args.get('q', '').strip().lower()
-    id_infocab = request.args.get('id_infocab', type=int)  # <-- recibimos el id actual
+    tipo_filtro = request.args.get('tipo', '').strip()
+
     cursor = em.database.cursor()
 
-    base_sql = """
+    sql = """
         SELECT 
-            infodet.id,
-            infodet.id_tipo,
-            infodet.referencia,
-            infodet.desc1,
-            infodet.desc2,
-            infodet.notas,
-            infocab.referencia,
-            infotipo.nombre
+        infodet.id,
+        infodet.id_tipo,
+        infodet.referencia,
+        infodet.desc1,
+        infodet.desc2,
+        infodet.notas,
+        infocab.referencia,
+        infodet.id_infocab,
+        infotipo.nombre
         FROM public.infodet
-        INNER JOIN public.infocab ON infodet.id_infocab = infocab.id
-        INNER JOIN public.infotipo ON infodet.id_tipo = infotipo.id
-        WHERE infodet.id_infocab = %s
+        INNER JOIN public.infocab 
+            ON infodet.id_infocab = infocab.id
+        INNER JOIN public.infotipo 
+            ON infodet.id_tipo = infotipo.id
+        WHERE infocab.referencia = %s
     """
-
-    params = [id_infocab]
+    params = [referencia_filtro]
 
     if filtro:
-        base_sql += " AND (LOWER(infocab.referencia) LIKE %s OR LOWER(infodet.referencia) LIKE %s OR LOWER(infotipo.nombre) LIKE %s)"
+        sql += """
+            AND LOWER(infodet.referencia) LIKE %s
+        """
         filtro_param = f'%{filtro}%'
-        params.extend([filtro_param, filtro_param, filtro_param])
+        params.append(filtro_param)
 
-    base_sql += " ORDER BY infocab.referencia ASC;"
+    if tipo_filtro:
+        sql += " AND infodet.id_tipo = %s"
+        params.append(tipo_filtro)
 
-    cursor.execute(base_sql, tuple(params))
+    sql += " ORDER BY infocab.referencia ASC;"
+
+    cursor.execute(sql, tuple(params))
     detalles = cursor.fetchall()
     cursor.close()
 
@@ -542,9 +552,12 @@ def api_detalles():
         'desc1': d[3],
         'desc2': d[4],
         'notas': d[5],
-        'infocab_ref': d[6],
-        'nombre_infotipo': d[7]
+        'cabecera_referencia': d[6],
+        'id_infocab': d[7],
+        'tipo_nombre': d[8]
     } for d in detalles]
+
+    print("Detalles obtenidos:", data)  # Depuración
 
     return jsonify(data)
 

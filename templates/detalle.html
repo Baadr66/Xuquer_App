@@ -4,176 +4,612 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 10px; }
-        
-        .header { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .volver-btn { background: #6c757d; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; transition: 0.3s; }
-        .volver-btn:hover { background: #5a6268; }
+        /* Reseteo universal: elimina márgenes, padding y configura box-sizing para todos los elementos */
+    * { 
+        margin: 0; /* Elimina todos los márgenes por defecto */
+        padding: 0; /* Elimina todos los paddings por defecto */
+        box-sizing: border-box; /* Hace que width y height incluyan padding y border */
+    }
 
-        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .card-title { font-size: 0.9em; color: #666; margin-bottom: 10px; }
+    /* Estilos del body (cuerpo de la página) */
+    body { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Define la fuente principal */
+        background: #f5f5f5; /* Color de fondo gris claro */
+        font-size: 13px; /* Tamaño de fuente base */
+        overflow-x: hidden; /* Oculta el scroll horizontal si hay contenido que se desborda */
+    }
 
-        .footer { background: #fff; padding: 15px; border-radius: 8px; margin-top: 20px; }
+    /* Cabecera principal de la página */
+    .header { 
+        background: #2b579a; /* Color de fondo azul oscuro */
+        color: white; /* Color de texto blanco */
+        padding: 8px 12px; /* Espaciado interno: 8px arriba/abajo, 12px izquierda/derecha */
+        display: flex; /* Usa flexbox para alinear elementos */
+        align-items: center; /* Centra verticalmente los elementos */
+        gap: 10px; /* Espacio de 10px entre elementos flexbox */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Sombra: 2px hacia abajo, 4px difuminado, negro 20% opacidad */
+    }
 
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            background-color: white;
-            appearance: none; /* elimina el estilo por defecto de select en algunos navegadores */
-            -webkit-appearance: none;
-            -moz-appearance: none;
+    /* Botón de volver */
+    .volver-btn { 
+        background: rgba(255,255,255,0.2); /* Fondo blanco con 20% de opacidad (translúcido) */
+        color: white; /* Texto blanco */
+        padding: 5px 10px; /* Espaciado interno: 5px arriba/abajo, 10px izquierda/derecha */
+        text-decoration: none; /* Elimina el subrayado del enlace */
+        border-radius: 3px; /* Bordes redondeados de 3px */
+        font-size: 12px; /* Tamaño de fuente pequeño */
+        border: 1px solid rgba(255,255,255,0.3); /* Borde blanco con 30% opacidad */
+    }
+
+    /* Estado hover (al pasar el ratón) del botón volver */
+    .volver-btn:hover { 
+        background: rgba(255,255,255,0.3); /* Aumenta la opacidad del fondo a 30% */
+    }
+
+    /* Barra de herramientas */
+    .toolbar {
+        background: #217346; /* Color verde oscuro (estilo Excel) */
+        color: white; /* Texto blanco */
+        padding: 6px 12px; /* Espaciado interno: 6px arriba/abajo, 12px izquierda/derecha */
+        font-size: 12px; /* Tamaño de fuente pequeño */
+        display: flex; /* Usa flexbox */
+        justify-content: space-between; /* Distribuye elementos en los extremos */
+        align-items: center; /* Centra verticalmente */
+    }
+
+    /* Contenedor de búsqueda */
+    .search-container {
+        background: white; /* Fondo blanco */
+        padding: 8px 12px; /* Espaciado interno */
+        border-bottom: 2px solid #217346; /* Borde inferior verde de 2px */
+    }
+
+    /* Input de búsqueda dentro del contenedor */
+    .search-container input {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        padding: 6px 10px; /* Espaciado interno */
+        border: 1px solid #d0d0d0; /* Borde gris claro */
+        font-size: 13px; /* Tamaño de fuente */
+        border-radius: 2px; /* Bordes ligeramente redondeados */
+    }
+
+    /* Contenedor de la tabla con scroll horizontal */
+    .table-container {
+        overflow-x: auto; /* Permite scroll horizontal si la tabla es muy ancha */
+        background: white; /* Fondo blanco */
+    }
+
+    /* Estilos de la tabla */
+    table {
+        width: 100%; /* La tabla ocupa todo el ancho del contenedor */
+        border-collapse: collapse; /* Elimina espacios entre bordes de celdas */
+        background: white; /* Fondo blanco */
+    }
+
+    /* Cabecera de la tabla (thead) */
+    thead {
+        background: #217346; /* Fondo verde (estilo Excel) */
+        color: white; /* Texto blanco */
+        position: sticky; /* La cabecera permanece fija al hacer scroll */
+        top: 0; /* Se pega a la parte superior */
+        z-index: 10; /* Aparece por encima de otros elementos */
+    }
+
+    /* Celdas de encabezado (th) */
+    th {
+        padding: 8px 6px; /* Espaciado interno */
+        text-align: left; /* Alinea el texto a la izquierda */
+        font-weight: 600; /* Texto semi-negrita */
+        font-size: 11px; /* Tamaño de fuente pequeño */
+        border: 1px solid #1a5c37; /* Borde verde más oscuro */
+        white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+    }
+
+    /* Celdas de datos (td) */
+    td {
+        padding: 4px 6px; /* Espaciado interno reducido */
+        border: 1px solid #d0d0d0; /* Borde gris claro */
+        background: white; /* Fondo blanco */
+        vertical-align: top; /* Alinea el contenido en la parte superior */
+    }
+
+    /* Efecto hover en las filas: cambia color al pasar el ratón */
+    tr:hover td {
+        background: #fff9e6; /* Fondo amarillo claro al pasar el ratón */
+    }
+
+    /* Celda de encabezado de fila (números de fila estilo Excel) */
+    .row-header {
+        background: #f0f0f0; /* Fondo gris claro */
+        font-weight: 600; /* Texto semi-negrita */
+        font-size: 11px; /* Tamaño de fuente pequeño */
+        text-align: center; /* Texto centrado */
+        width: 40px; /* Ancho fijo de 40px */
+        color: #444; /* Color de texto gris oscuro */
+    }
+
+    /* Estilos para inputs de texto, selects y textareas */
+    input[type="text"], select, textarea {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        padding: 3px 5px; /* Espaciado interno mínimo */
+        border: 1px solid #d0d0d0; /* Borde gris claro */
+        font-size: 12px; /* Tamaño de fuente */
+        font-family: inherit; /* Hereda la fuente del padre */
+        background: white; /* Fondo blanco */
+    }
+
+    /* Estado focus (cuando el usuario hace clic en el input) */
+    input[type="text"]:focus, select:focus, textarea:focus {
+        outline: 2px solid #217346; /* Borde verde de 2px cuando está activo */
+        border-color: #217346; /* Cambia el color del borde a verde */
+    }
+
+    /* Estilos específicos para select */
+    select {
+        padding: 3px 3px; /* Padding reducido para selects */
+    }
+
+    /* Estilos específicos para textarea */
+    textarea {
+        min-height: 40px; /* Altura mínima de 40px */
+        resize: vertical; /* Permite redimensionar solo verticalmente */
+        font-family: inherit; /* Hereda la fuente del padre */
+    }
+
+    /* Celda que contiene botones */
+    .btn-cell {
+        text-align: center; /* Centra el contenido */
+        white-space: nowrap; /* Evita saltos de línea */
+        width: 200px; /* Ancho fijo de 200px */
+    }
+
+    /* Grupo de botones alineados horizontalmente */
+    .btn-group {
+        display: flex; /* Usa flexbox */
+        gap: 3px; /* Espacio de 3px entre botones */
+        justify-content: center; /* Centra los botones */
+    }
+
+    /* Estilos base para todos los botones */
+    .btn {
+        padding: 4px 8px; /* Espaciado interno */
+        border: none; /* Sin borde */
+        border-radius: 2px; /* Bordes ligeramente redondeados */
+        font-size: 11px; /* Tamaño de fuente pequeño */
+        cursor: pointer; /* Cambia el cursor a manita al pasar por encima */
+        color: white; /* Texto blanco */
+        font-weight: 500; /* Texto medio-negrita */
+        white-space: nowrap; /* Evita saltos de línea en el texto del botón */
+    }
+
+    /* Efecto hover genérico para botones */
+    .btn:hover { 
+        opacity: 0.85; /* Reduce la opacidad a 85% al pasar el ratón */
+    }
+
+    /* Botón de guardar (verde) */
+    .btn-save { 
+        background: #217346; /* Fondo verde */
+    }
+
+    /* Botón de eliminar (rojo) */
+    .btn-delete { 
+        background: #c00000; /* Fondo rojo */
+    }
+
+    /* Botón de detalles (azul) */
+    .btn-details { 
+        background: #0078d4; /* Fondo azul */
+    }
+
+    /* Fila expandida (cuando se muestran detalles) */
+    .expanded-row {
+        background: #f8f8f8; /* Fondo gris muy claro */
+    }
+
+    /* Contenido de la fila expandida */
+    .expanded-content {
+        padding: 8px; /* Espaciado interno */
+        display: grid; /* Usa CSS Grid */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columnas responsivas: mínimo 250px, se ajustan automáticamente */
+        gap: 8px; /* Espacio de 8px entre elementos del grid */
+    }
+
+    /* Grupo de campo (label + input) */
+    .field-group {
+        display: flex; /* Usa flexbox */
+        flex-direction: column; /* Apila elementos verticalmente */
+        gap: 3px; /* Espacio de 3px entre label e input */
+    }
+
+    /* Etiqueta de campo */
+    .field-label {
+        font-size: 11px; /* Tamaño de fuente pequeño */
+        font-weight: 600; /* Texto semi-negrita */
+        color: #444; /* Color gris oscuro */
+    }
+
+    /* Botón flotante para agregar fila (FAB - Floating Action Button) */
+    .add-row-btn {
+        position: fixed; /* Posición fija en la pantalla */
+        bottom: 20px; /* 20px desde el borde inferior */
+        right: 20px; /* 20px desde el borde derecho */
+        width: 50px; /* Ancho de 50px */
+        height: 50px; /* Alto de 50px (botón circular) */
+        border-radius: 50%; /* Hace el botón completamente circular */
+        background: #217346; /* Fondo verde */
+        color: white; /* Texto/icono blanco */
+        border: none; /* Sin borde */
+        font-size: 24px; /* Tamaño de fuente grande para el símbolo + */
+        cursor: pointer; /* Cursor de manita */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Sombra: 4px abajo, 8px difuminado, negro 30% */
+        z-index: 100; /* Aparece por encima de otros elementos */
+    }
+
+    /* Efecto hover del botón flotante */
+    .add-row-btn:hover {
+        background: #1a5c37; /* Verde más oscuro */
+        transform: scale(1.05); /* Aumenta el tamaño 5% */
+    }
+
+    /* Modal (ventana emergente) - oculto por defecto */
+    .modal {
+        display: none; /* Oculto inicialmente */
+        position: fixed; /* Posición fija que cubre toda la pantalla */
+        top: 0; /* Desde arriba */
+        left: 0; /* Desde la izquierda */
+        width: 100%; /* Ancho completo */
+        height: 100%; /* Alto completo */
+        background: rgba(0,0,0,0.5); /* Fondo negro semi-transparente (overlay) */
+        z-index: 1000; /* Aparece por encima de todo */
+    }
+
+    /* Contenido del modal (caja blanca) */
+    .modal-content {
+        background: white; /* Fondo blanco */
+        margin: 5% auto; /* 5% desde arriba, centrado horizontalmente */
+        padding: 0; /* Sin padding (se aplica a secciones internas) */
+        width: 90%; /* 90% del ancho de la pantalla */
+        max-width: 600px; /* Ancho máximo de 600px */
+        border-radius: 4px; /* Bordes redondeados */
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3); /* Sombra pronunciada */
+    }
+
+    /* Cabecera del modal */
+    .modal-header {
+        background: #217346; /* Fondo verde */
+        color: white; /* Texto blanco */
+        padding: 12px 15px; /* Espaciado interno */
+        display: flex; /* Usa flexbox */
+        justify-content: space-between; /* Título a la izquierda, botón cerrar a la derecha */
+        align-items: center; /* Centra verticalmente */
+    }
+
+    /* Título del modal */
+    .modal-title {
+        font-size: 16px; /* Tamaño de fuente */
+        font-weight: 600; /* Texto semi-negrita */
+    }
+
+    /* Botón de cerrar modal (X) */
+    .close-btn {
+        background: transparent; /* Sin fondo */
+        border: none; /* Sin borde */
+        color: white; /* Símbolo blanco */
+        font-size: 24px; /* Tamaño grande */
+        cursor: pointer; /* Cursor de manita */
+        width: 30px; /* Ancho */
+        height: 30px; /* Alto */
+    }
+
+    /* Cuerpo del modal (contenido principal) */
+    .modal-body {
+        padding: 15px; /* Espaciado interno */
+    }
+
+    /* Fila de formulario */
+    .form-row {
+        margin-bottom: 12px; /* Espacio entre campos del formulario */
+    }
+
+    /* Etiqueta de formulario */
+    .form-label {
+        display: block; /* Ocupa toda la línea */
+        font-weight: 600; /* Texto semi-negrita */
+        margin-bottom: 4px; /* Espacio debajo de la etiqueta */
+        font-size: 12px; /* Tamaño de fuente */
+        color: #333; /* Color gris oscuro */
+    }
+
+    /* Control de formulario (input) */
+    .form-control {
+        width: 100%; /* Ancho completo */
+        padding: 6px 8px; /* Espaciado interno */
+        border: 1px solid #d0d0d0; /* Borde gris claro */
+        font-size: 13px; /* Tamaño de fuente */
+        border-radius: 2px; /* Bordes ligeramente redondeados */
+    }
+
+    /* Estado focus de controles de formulario */
+    .form-control:focus {
+        outline: 2px solid #217346; /* Borde verde de 2px */
+        border-color: #217346; /* Cambia color del borde a verde */
+    }
+
+    /* Pie del modal */
+    .modal-footer {
+        padding: 12px 15px; /* Espaciado interno */
+        background: #f5f5f5; /* Fondo gris claro */
+        border-top: 1px solid #d0d0d0; /* Borde superior gris */
+        text-align: right; /* Alinea contenido a la derecha */
+    }
+
+    /* Botón de envío de formulario */
+    .btn-submit {
+        background: #217346; /* Fondo verde */
+        color: white; /* Texto blanco */
+        padding: 8px 20px; /* Espaciado interno */
+        border: none; /* Sin borde */
+        border-radius: 2px; /* Bordes ligeramente redondeados */
+        font-size: 13px; /* Tamaño de fuente */
+        cursor: pointer; /* Cursor de manita */
+        font-weight: 600; /* Texto semi-negrita */
+    }
+
+    /* Efecto hover del botón submit */
+    .btn-submit:hover {
+        background: #1a5c37; /* Verde más oscuro */
+    }
+
+    /* Celda con información que puede ser muy larga */
+    .info-cell {
+        max-width: 150px; /* Ancho máximo de 150px */
+        overflow: hidden; /* Oculta el contenido que se desborda */
+        text-overflow: ellipsis; /* Muestra "..." cuando el texto es muy largo */
+        white-space: nowrap; /* Evita saltos de línea */
+    }
+
+    /* Media query: estilos para pantallas pequeñas (móviles) */
+    @media (max-width: 768px) {
+        /* Reduce tamaños en pantallas menores a 768px */
+        th, td {
+            font-size: 11px; /* Fuente más pequeña */
+            padding: 3px 4px; /* Padding reducido */
         }
-
-        select {
-            background-image: url('data:image/svg+xml;utf8,<svg fill="gray" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><polygon points="0,0 20,0 10,10"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px;
+        .btn {
+            padding: 3px 6px; /* Botones más pequeños */
+            font-size: 10px; /* Fuente más pequeña */
         }
-
-
-        textarea { min-height: 60px; }
-
-        .extra { display: none; }
-        .extra.show { display: block; }
-
-        .btn { width: 100%; padding: 12px; margin-bottom: 8px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; color: white; transition: 0.3s; }
-        .btn:hover { opacity: 0.8; }
-        .btn-toggle { background: #28a745; }
-        .btn-save { background: #007bff; }
-        .btn-delete { background: #dc3545; }
+    }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <a href="/admin" class="volver-btn">⬅ Volver</a>
+        <a href="/cabecera" class="volver-btn">← Volver</a>
         <strong>{{ username.capitalize() }}</strong>
     </div>
 
-    <div class="search-bar">
-        <input type="text" id="searchDetalles" placeholder="Buscar detalle..." class="form-control" />
+    <div class="toolbar">
+        <span>📋 {{ referencia }}</span>
+        <span id="recordCount">Registros: {{ detalles|length }}</span>
     </div>
-    <div id="contenedorCards">
-        {% for det in detalles %}
-        <div class="card">
-            <div class="card-title">Registro #{{ det[0] }}</div>
-            <form id="form-{{ det[0] }}" action="/actualizar_det/{{ det[0] }}" method="post">
-                <input type="text" name="id_infocab" value="{{ det[6] }}" placeholder="ID Infocab" required>
-                <input type="text" name="referencia" value="{{ det[2] }}" placeholder="Referencia" required>
-                
-                <div class="extra" id="extra-{{ det[0] }}">
-                    <textarea name="desc1" placeholder="Descripción 1">{{ det[3] }}</textarea>
-                    <textarea name="desc2" placeholder="Descripción 2">{{ det[4] }}</textarea>
-                    <textarea name="notas" placeholder="Notas">{{ det[5] }}</textarea>
+
+    <div class="search-container">
+        <input type="text" id="searchDetalles" placeholder="🔍 Buscar en todos los campos..." />
+    </div>
+
+    <div class="table-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th class="row-header">Cabecera</th>
+                    <th style="min-width: 150px;">Tipo</th>
+                    <th style="min-width: 150px;">Referencia</th>
+                    <th style="width: 200px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% for det in detalles %}
+                <tr data-id="{{ det[0] }}">
+                    <td class="row-header">{{ det[6] }}</td>
+                    <td>
+                        <form id="form-{{ det[0] }}" action="/actualizar_det/{{ det[0] }}" method="post" style="margin: 0;">
+                            <select name="id_infotipo" required>
+                                {% for ref in referencias %}
+                                    <option value="{{ ref[0] }}" {% if ref[0] == det[1] %}selected{% endif %}>{{ ref[1] }}</option>
+                                {% endfor %}
+                            </select>
+                    </td>
+                    <td>
+                        <input type="text" name="referencia" value="{{ det[2] }}" required>
+                        <input type="hidden" name="id_infocab" value="{{ det[7] }}">
+                    </td>
+                    <td class="btn-cell">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-details" onclick="toggleDetails({{ det[0] }})">+Info</button>
+                            <button type="submit" class="btn btn-save">💾</button>
+                            <button type="button" class="btn btn-delete" onclick="eliminar({{ det[0] }})">🗑</button>
+                        </div>
+                        </form>
+                        <form id="del-{{ det[0] }}" action="/eliminar_det/{{ det[0] }}" method="post" style="display:none;">
+                            <input type="hidden" name="id_infocab" value="{{ det[7] }}">
+                        </form>
+                    </td>
+                </tr>
+                <tr id="details-{{ det[0] }}" class="expanded-row" style="display: none;">
+                    <td colspan="6">
+                        <div class="expanded-content">
+                            <div class="field-group">
+                                <label class="field-label">Descripción 1</label>
+                                <textarea form="form-{{ det[0] }}" name="desc1" placeholder="Descripción 1">{{ det[3] }}</textarea>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Descripción 2</label>
+                                <textarea form="form-{{ det[0] }}" name="desc2" placeholder="Descripción 2">{{ det[4] }}</textarea>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Notas</label>
+                                <textarea form="form-{{ det[0] }}" name="notas" placeholder="Notas">{{ det[5] }}</textarea>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <button class="add-row-btn" onclick="openModal()">+</button>
+
+    <div id="addModal" class="modal" onclick="closeModalOutside(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">➕ Agregar Nuevo Registro</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            
+            <form action="/agregar_det" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="id_infocab" value="{{ detalles[0][7] if detalles else '' }}">
+                    
+                    <div class="form-row">
+                        <label class="form-label">Tipo *</label>
+                        <select name="id_infotipo" class="form-control" required>
+                            <option value="" disabled selected>Seleccionar tipo...</option>
+                            {% for ref in referencias %}
+                                <option value="{{ ref[0] }}">{{ ref[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Referencia *</label>
+                        <input type="text" name="referencia" class="form-control" placeholder="Ingrese referencia" required>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Descripción 1</label>
+                        <textarea name="desc1" class="form-control" placeholder="Descripción 1 (opcional)" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Descripción 2</label>
+                        <textarea name="desc2" class="form-control" placeholder="Descripción 2 (opcional)" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Notas</label>
+                        <textarea name="notas" class="form-control" placeholder="Notas adicionales (opcional)" rows="2"></textarea>
+                    </div>
                 </div>
 
-                <!-- Las dobles llaves sirven para insertar el valor de una variable de Python en el HTML final -->
-                <button type="button" class="btn btn-toggle" onclick="toggle({{ det[0] }}, this)">🔽 Ver más</button>
-                <button type="submit" class="btn btn-save">💾 Guardar</button>
-                <button type="button" class="btn btn-delete" onclick="eliminar({{ det[0] }}, this)">🗑 Eliminar</button>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit">Agregar Registro</button>
+                </div>
             </form>
-            <form id="del-{{ det[0] }}" action="/eliminar_det/{{ det[0] }}" method="post" style="display:none;"></form>
         </div>
-        {% endfor %}
     </div>
 
-    <div class="footer" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
-        <div class="card-title" style="color: white;">➕ Nuevo Registro</div>
-        <form action="/agregar_det" method="post">
-            <select name="id_infocab" required>
-                <option value="" disabled selected>Selecciona un ID Infocab</option>
-                {% for ref in referencias %}
-                    <option value="{{ ref[0] }}">{{ ref[1] }}</option>
-                {% endfor %}
-            </select>
+<script>
 
-
-
-
-            <input type="text" name="referencia" placeholder="Referencia" required>
-            <textarea name="desc1" placeholder="Descripción 1"></textarea>
-            <textarea name="desc2" placeholder="Descripción 2"></textarea>
-            <textarea name="notas" placeholder="Notas"></textarea>
-            <button type="submit" class="btn" style="background: #28a745;">✅ Agregar</button>
-        </form>
-    </div>
-
-
-    <script>
-        
-        const tipos = [
+    const tipos = [
         {% for ref in referencias %}
             { id: "{{ ref[0] }}", nombre: "{{ ref[1] }}" },
         {% endfor %}
     ];
 
+    function toggleDetails(id) {
+        const detailsRow = document.getElementById("details-" + id);
+        const isVisible = detailsRow.style.display !== "none";
+        detailsRow.style.display = isVisible ? "none" : "table-row";
+    }
 
-        function toggle(id, btn) {
-            const extra = document.getElementById('extra-' + id); // Obtener el elemento extra correspondiente al id
-            extra.classList.toggle('show');// Alternar la clase 'show' para mostrar u ocultar
-            btn.textContent = extra.classList.contains('show') ? '🔼 Ocultar' : '🔽 Ver más';
+    function eliminar(id) {
+        if (confirm("¿Está seguro de eliminar este registro?")) {
+            document.getElementById("del-" + id).submit();
         }
+    }
 
-        function eliminar(id) {
-            if (confirm('¿Eliminar este registro?')) {
-                document.getElementById('del-' + id).submit();
-            }
+    function openModal() {
+        document.getElementById("addModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("addModal").style.display = "none";
+    }
+
+    function closeModalOutside(event) {
+        if (event.target.id === "addModal") {
+            closeModal();
         }
+    }
 
-        document.getElementById('searchDetalles').addEventListener('keyup', async function() {
-            const q = this.value.trim();// Obtener el valor del input de búsqueda
-            const contenedor = document.getElementById('contenedorCards');// Contenedor donde se mostrarán las tarjetas
-            contenedor.innerHTML = '<p>Buscando...</p>';
+    function renderRow(det, index) {
+        let options = tipos.map(t =>
+            `<option value="${t.id}" ${t.id == det.id_infotipo ? "selected" : ""}>${t.nombre}</option>`
+        ).join("");
 
-            const response = await fetch(`/api/detalles?q=${encodeURIComponent(q)}`); // Realizar la solicitud a la API con el parámetro de búsqueda
-            const data = await response.json();// obtener los datos en formato JSON
-
-            if (!data.length) {
-                contenedor.innerHTML = '<p>No se encontraron resultados.</p>';
-                return;// Si no hay resultados, mostrar mensaje y salir
-            }
-
-            contenedor.innerHTML = '';
-            data.forEach(d => {
-                // Construir opciones del select
-                    let opciones = `<option value="" disabled ${!d.id_infocab ? 'selected' : ''}>Selecciona un tipo</option>`;
-                    tipos.forEach(t => {
-                        const selected = (String(t.id) === String(d.id_infocab)) ? 'selected' : '';
-                        opciones += `<option value="${t.id}" ${selected}>${t.nombre}</option>`;
-                    });
-
-
-
-                    
-                const card = `
-                <div class="card">
-                    <div class="card-title">Registro #${d.id}</div>
-                    <form id="form-${d.id}" action="/actualizar_det/${d.id}" method="post">
-                        <select name="id_infocab" required>
-                            ${opciones}
-                        </select>
-                        <input type="text" name="referencia" value="${d.referencia}" placeholder="Referencia" required>
-                        <div class="extra" id="extra-${d.id}">
-                            <textarea name="desc1" placeholder="Descripción 1">${d.desc1 || ''}</textarea> <!-- si el valor es falso muestra el de la derecha -->
-                            <textarea name="desc2" placeholder="Descripción 2">${d.desc2 || ''}</textarea> <!-- si el valor es falso muestra el de la derecha -->
-                            <textarea name="notas" placeholder="Notas">${d.notas || ''}</textarea> <!-- si el valor es falso muestra el de la derecha -->
-                        </div>
-
-                        <button type="button" class="btn btn-toggle" onclick="toggle(${d.id}, this)">🔽 Ver más</button>
-                        <button type="submit" class="btn btn-save">💾 Guardar</button>
-                        <button type="button" class="btn btn-delete" onclick="eliminar(${d.id})">🗑 Eliminar</button>
+        return `
+            <tr data-id="${det.id}">
+                <td>
+                    <form id="form-${det.id}" action="/actualizar_det/${det.id}" method="post" style="margin: 0;">
+                        <select name="id_infotipo" required>${options}</select>
+                </td>
+                <td>
+                    <input type="text" name="referencia" value="${det.referencia}" required>
+                    <input type="hidden" name="id_infocab" value="${det.id_infocab}">
+                </td>
+                <td class="btn-cell">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-details" onclick="toggleDetails(${det.id})">+Info</button>
+                        <button type="submit" class="btn btn-save">💾</button>
+                        <button type="button" class="btn btn-delete" onclick="eliminar(${det.id})">🗑</button>
+                    </div>
                     </form>
-                    <form id="del-${d.id}" action="/eliminar_det/${d.id}" method="post" style="display:none;"></form>
-                </div>`;
-                contenedor.innerHTML += card;
-            });
-        });
-        </script>
+                    <form id="del-${det.id}" action="/eliminar_det/${det.id}" method="post" style="display:none;">
+                        <input type="hidden" name="id_infocab" value="${det.id_infocab}">
+                    </form>
+                </td>
+            </tr>
+            <tr id="details-${det.id}" class="expanded-row" style="display: none;">
+                <td colspan="6">
+                    <div class="expanded-content">
+                        <div class="field-group">
+                            <label class="field-label">Descripción 1</label>
+                            <textarea form="form-${det.id}" name="desc1">${det.desc1 || ""}</textarea>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Descripción 2</label>
+                            <textarea form="form-${det.id}" name="desc2">${det.desc2 || ""}</textarea>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Notas</label>
+                            <textarea form="form-${det.id}" name="notas">${det.notas || ""}</textarea>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    document.getElementById("searchDetalles").addEventListener("keyup", async function () {
+        const q = this.value.trim();
+        const tbody = document.getElementById("tableBody");
+        const id_infocab = document.getElementById("dataTable").closest('.table-container').previousElementSibling.previousElementSibling.dataset.infocab || "{{ detalles[0][7] if detalles else '' }}";
+
+        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center; padding:20px;'>🔍 Buscando...</td></tr>";
+
+        const response = await fetch(`/api/detalles?q=${encodeURIComponent(q)}&id_infocab=${id_infocab}`);
+        const data = await response.json();
+
+        tbody.innerHTML = "";
+        data.forEach((d, i) => tbody.innerHTML += renderRow(d, i + 1));
+        
+        document.getElementById("recordCount").textContent = `Registros: ${data.length}`;
+    });
+
+</script>
 
 </body>
 </html>
