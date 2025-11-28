@@ -1,14 +1,16 @@
 import psycopg2
-
+from config import Config
 # Conexión a la base de datos PostgreSQL
 try:
+
     database = psycopg2.connect(
-        host="192.168.0.175",
-        port=5432,
-        database="xuquer",
-        user="informatica",
-        password="infor.1234"
+        host=Config.DB_HOST,
+        port=Config.DB_PORT,
+        database=Config.DB_NAME,
+        user=Config.DB_USER,
+        password=Config.DB_PASSWORD
     )
+    
     print("✅ Conexión a la base de datos exitosa")
 
 except psycopg2.Error as e:

@@ -6,141 +6,467 @@
     <title>Accesos</title>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 10px; }
-
-        .header { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .volver-btn { background: #6c757d; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; }
-        .volver-btn:hover { background-color: #5a6268; }
-
-        .card {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        /* Reseteo universal */
+        * { 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        h2 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            color: #333;
-            text-align: center;
+        /* Estilos del body */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            font-size: 13px;
+            overflow-x: hidden;
         }
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        th {
-            background: #f2f2f2;
-            color: #555;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.95em;
-        }
-
-        .btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 5px;
+        /* Cabecera principal */
+        .header { 
+            background: #2b579a;
             color: white;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: background 0.3s;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .btn-save { background: #007bff; }
-        .btn-save:hover { background: #0056b3; }
+        /* Botón de volver */
+        .volver-btn { 
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 12px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
 
-        .btn-delete { background: #dc3545; }
-        .btn-delete:hover { background: #c82333; }
+        .volver-btn:hover { 
+            background: rgba(255,255,255,0.3);
+        }
 
-        .btn-add { background: #28a745; }
-        .btn-add:hover { background: #218838; }
-
-        td:last-child {
+        /* Barra de herramientas */
+        .toolbar {
+            background: #217346;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
             display: flex;
-            gap: 6px;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
         }
 
-        /* Formulario de agregar elemento */
-        .agregar-elemento {
-            display: flex;
-            gap: 10px;
+        /* Contenedor de búsqueda */
+        .search-container {
+            background: white;
+            padding: 8px 12px;
+            border-bottom: 2px solid #217346;
+        }
+
+        .search-container input {
             width: 100%;
-            max-width: 500px;
-            margin: 20px auto 0 auto;
-            flex-wrap: wrap;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 6px 10px;
+            border: 1px solid #d0d0d0;
+            font-size: 13px;
+            border-radius: 2px;
         }
 
-        .agregar-elemento input[type="text"] {
-            flex: 1;
-            min-width: 160px;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
+        /* Contenedor de la tabla */
+        .table-container {
+            overflow-x: auto;
+            background: white;
         }
 
-        .agregar-elemento .btn-add {
-            flex-shrink: 0;
+        /* Estilos de la tabla */
+        table {
             width: 100%;
-            max-width: 120px;
+            border-collapse: collapse;
+            background: white;
         }
 
-        .search-bar {
-            max-width: 500px;
-            margin: 0 auto 15px auto;
+        thead {
+            background: #217346;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            border: 1px solid #1a5c37;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 4px 6px;
+            border: 1px solid #d0d0d0;
+            background: white;
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: #fff9e6;
+        }
+
+        /* Inputs y selects */
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 3px 5px;
+            border: 1px solid #d0d0d0;
+            font-size: 12px;
+            font-family: inherit;
+            background: white;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            outline: 2px solid #217346;
+            border-color: #217346;
+        }
+
+        select {
+            padding: 3px 3px;
+        }
+
+        /* Celda de botones */
+        .btn-cell {
+            text-align: center;
+            white-space: nowrap;
+            width: 200px;
+        }
+
+        .btn-group {
             display: flex;
+            gap: 3px;
             justify-content: center;
         }
 
-        .search-bar input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.95em;
+        /* Botones */
+        .btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 2px;
+            font-size: 11px;
+            cursor: pointer;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
         }
 
-        @media (max-width: 500px) {
-            table, thead, tbody, th, td, tr { display: block; }
-            th { display: none; }
-            td { border: none; border-bottom: 1px solid #eee; text-align: right; padding-left: 50%; position: relative; }
+        .btn:hover { 
+            opacity: 0.85;
+        }
+
+        .btn-save { 
+            background: #217346;
+        }
+
+        .btn-delete { 
+            background: #c00000;
+        }
+
+        .btn-add { 
+            background: #217346;
+        }
+
+        /* Botón flotante */
+        .add-row-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #217346;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .add-row-btn:hover {
+            background: #1a5c37;
+            transform: scale(1.05);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: #217346;
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+        }
+
+        .modal-body {
+            padding: 15px;
+        }
+
+        .form-row {
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #d0d0d0;
+            font-size: 13px;
+            border-radius: 2px;
+        }
+
+        .form-control:focus {
+            outline: 2px solid #217346;
+            border-color: #217346;
+        }
+
+        .modal-footer {
+            padding: 12px 15px;
+            background: #f5f5f5;
+            border-top: 1px solid #d0d0d0;
+            text-align: right;
+        }
+
+        .btn-submit {
+            background: #217346;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 2px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-submit:hover {
+            background: #1a5c37;
+        }
+
+        /* RESPONSIVE - Tablets */
+        @media (max-width: 768px) {
+            body {
+                font-size: 12px;
+            }
+
+            .header {
+                padding: 6px 10px;
+                flex-wrap: wrap;
+            }
+
+            .volver-btn {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-start;
+                padding: 8px 10px;
+            }
+
+            th, td {
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+
+            .btn {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
+
+            .btn-cell {
+                width: auto;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        /* RESPONSIVE - Móviles */
+        @media (max-width: 600px) {
+            body {
+                font-size: 11px;
+            }
+
+            .header {
+                padding: 6px 8px;
+            }
+
+            .toolbar {
+                font-size: 11px;
+                padding: 6px 8px;
+            }
+
+            .search-container {
+                padding: 6px 8px;
+            }
+
+            /* Tabla responsive - convertir a cards */
+            .table-container {
+                padding: 10px;
+            }
+
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+            }
+            
+            thead { 
+                display: none; 
+            }
+
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid #d0d0d0;
+                border-radius: 6px;
+                padding: 10px;
+                background: #fafafa;
+            }
+
+            tr:hover {
+                background: #fff9e6;
+            }
+
+            td {
+                border: none;
+                padding: 8px 0;
+                text-align: left;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
             td::before {
                 content: attr(data-label);
-                position: absolute;
-                left: 15px;
-                width: 45%;
-                padding-left: 5px;
-                font-weight: bold;
-                text-align: left;
-                color: #555;
+                font-weight: 600;
+                color: #217346;
+                font-size: 11px;
+                margin-bottom: 3px;
             }
+
+            .btn-cell {
+                width: 100%;
+            }
+
+            .btn-cell::before {
+                content: 'Acciones';
+            }
+
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+                gap: 5px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            /* Botón flotante más pequeño en móvil */
+            .add-row-btn {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+                font-size: 20px;
+            }
+
+            /* Modal a pantalla completa en móvil */
+            .modal-content {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                border-radius: 0;
+                max-width: none;
+            }
+
+            .modal-body {
+                padding: 12px;
+                max-height: calc(100vh - 120px);
+                overflow-y: auto;
+            }
+
+            .form-row {
+                margin-bottom: 10px;
+            }
+        }
+
+        /* RESPONSIVE - Móviles pequeños */
+        @media (max-width: 400px) {
+            .header strong {
+                font-size: 11px;
+            }
+
+            .toolbar {
+                font-size: 10px;
+            }
+
+            .add-row-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+
+        /* Mejoras de accesibilidad */
+        .btn:focus, input:focus, select:focus {
+            outline: 2px solid #217346;
+            outline-offset: 2px;
         }
     </style>
 </head>
@@ -148,17 +474,20 @@
 <body>
 
     <div class="header">
-        <a href="/admin" class="volver-btn">⬅ Volver</a>
-        <span style="margin-left: 15px; font-weight: bold;">{{ username.capitalize() }}</span>
+        <a href="/admin" class="volver-btn">← Volver</a>
+        <strong>{{ username.capitalize() }}</strong>
     </div>
 
-    <div class="card">
-        <h2>Accesos de {{ username.capitalize() }}</h2>
+    <div class="toolbar">
+        <span>📋 Accesos</span>
+        <span id="recordCount">Registros: {{ tipos|length }}</span>
+    </div>
 
-        <div class="search-bar">
-            <input type="text" id="searchTipos" placeholder="Buscar acceso..." />
-        </div>
+    <div class="search-container">
+        <input type="text" id="searchTipos" placeholder="🔍 Buscar acceso..." />
+    </div>
 
+    <div class="table-container">
         <table id="tablaTipos">
             <thead>
                 <tr>
@@ -172,24 +501,44 @@
                     <td data-label="Nombre">
                         <input type="text" form="form-{{ tipo[0] }}" name="nombre" value="{{ tipo[1] }}" required>
                     </td>
-                    <td data-label="Acciones">
-                        <form id="form-{{ tipo[0] }}" action="/actualizar/{{ tipo[0] }}" method="post">
-                            <button type="submit" class="btn btn-save">💾 Guardar</button>
-                        </form>
-                        <form action="/eliminar/{{ tipo[0] }}" method="post">
-                            <button type="button" class="btn btn-delete" onclick="confirmarEliminacion('{{ tipo[0] }}')">🗑 Eliminar</button>
-                        </form>
+                    <td data-label="Acciones" class="btn-cell">
+                        <div class="btn-group">
+                            <form id="form-{{ tipo[0] }}" action="/actualizar/{{ tipo[0] }}" method="post">
+                                <button type="submit" class="btn btn-save">💾 Guardar</button>
+                            </form>
+                            <form action="/eliminar/{{ tipo[0] }}" method="post">
+                                <button type="button" class="btn btn-delete" onclick="confirmarEliminacion('{{ tipo[0] }}')">🗑 Eliminar</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
 
-        <!-- Formulario de agregar elemento -->
-        <form id="form-agregar" action="/agregar" method="post" class="agregar-elemento">
-            <input type="text" name="nombre" placeholder="Nombre del nuevo elemento" required>
-            <button type="submit" class="btn btn-add">✅ Agregar</button>
-        </form>
+    <button class="add-row-btn" onclick="openModal()">+</button>
+
+    <div id="addModal" class="modal" onclick="closeModalOutside(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">➕ Agregar Nuevo Acceso</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            
+            <form action="/agregar" method="post">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <label class="form-label">Nombre *</label>
+                        <input type="text" name="nombre" class="form-control" placeholder="Nombre del nuevo elemento" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit">Agregar</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -199,37 +548,61 @@
             }
         }
 
+        function openModal() {
+            document.getElementById("addModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("addModal").style.display = "none";
+        }
+
+        function closeModalOutside(event) {
+            if (event.target.id === "addModal") {
+                closeModal();
+            }
+        }
+
         document.getElementById('searchTipos').addEventListener('input', async function() {
             const q = this.value.trim();
             const tbody = document.querySelector('#tablaTipos tbody');
-            tbody.innerHTML = '<tr><td colspan="2">Buscando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 15px; color: #666;">Buscando...</td></tr>';
 
-            const response = await fetch(`/api/tipos?q=${encodeURIComponent(q)}`);
-            const data = await response.json();
+            try {
+                const response = await fetch(`/api/tipos?q=${encodeURIComponent(q)}`);
+                const data = await response.json();
 
-            if (!data.length) {
-                tbody.innerHTML = '<tr><td colspan="2">No se encontraron resultados.</td></tr>';
-                return;
+                if (!data.length) {
+                    tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 15px; color: #666;">No se encontraron resultados.</td></tr>';
+                    document.getElementById('recordCount').innerText = 'Registros: 0';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                data.forEach(t => {
+                    const row = `
+                        <tr>
+                            <td data-label="Nombre">
+                                <input type="text" form="form-${t.id}" name="nombre" value="${t.nombre}" required>
+                            </td>
+                            <td data-label="Acciones" class="btn-cell">
+                                <div class="btn-group">
+                                    <form id="form-${t.id}" action="/actualizar/${t.id}" method="post">
+                                        <button type="submit" class="btn btn-save">💾 Guardar</button>
+                                    </form>
+                                    <form action="/eliminar/${t.id}" method="post">
+                                        <button type="button" class="btn btn-delete" onclick="confirmarEliminacion('${t.id}')">🗑 Eliminar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>`;
+                    tbody.innerHTML += row;
+                });
+
+                document.getElementById('recordCount').innerText = `Registros: ${data.length}`;
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 15px; color: #c00000;">Error al buscar. Intenta nuevamente.</td></tr>';
+                console.error('Error:', error);
             }
-
-            tbody.innerHTML = '';
-            data.forEach(t => {
-                const row = `
-                    <tr>
-                        <td data-label="Nombre">
-                            <input type="text" form="form-${t.id}" name="nombre" value="${t.nombre}" required>
-                        </td>
-                        <td data-label="Acciones">
-                            <form id="form-${t.id}" action="/actualizar/${t.id}" method="post">
-                                <button type="submit" class="btn btn-save">💾 Guardar</button>
-                            </form>
-                            <form action="/eliminar/${t.id}" method="post">
-                                <button type="button" class="btn btn-delete" onclick="confirmarEliminacion('${t.id}')">🗑 Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>`;
-                tbody.innerHTML += row;
-            });
         });
     </script>
 

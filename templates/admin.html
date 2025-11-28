@@ -2,97 +2,76 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ⭐ NECESARIO EN MÓVIL -->
-
-
-        <!--
-        name="viewport" Le dice al navegador que vas a controlar el "viewport" (área visible de la página en pantalla).
-
-
-        content="width=device-width"
-        Establece que el ancho de la página debe coincidir con el ancho del dispositivo.
-        Sin esto, los navegadores móviles usan un ancho por defecto de unos 980px, lo que hace que tu diseño se vea pequeño o desajustado.
-
-        initial-scale=1.0"
-        Establece el nivel de zoom inicial al 100% (sin hacer zoom).
-        -->
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-
-
-
         body {
             display: flex;
-            flex-direction: column;  /* ⭐ ahora se apilan en columna */
-            align-items: center;     /* centra horizontalmente */
-            justify-content: flex-start; /* empieza arriba, no en el centro vertical */
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
             min-height: 100vh;
             padding: 20px;
             margin: 0;
             background-color: #f9f9f9;
         }
 
-
-
-        .bienvenida-completa {
-            text-align: center;/* Centrar el texto */
-            background: white; /* Fondo blanco para el contenedor */
-            margin-top: 50px;/* Espacio superior */
-            padding: 30px;/* Espaciado interno */
-            padding: 0 20px; /* margen lateral para móviles */
-        }
-
-        .bienvenida-completa h1 {
-            font-size: 2em;/* Tamaño de fuente grande */
-            color: #333;/* Color de texto oscuro */
-            margin-bottom: 10px;/* Espacio inferior */
-        }
-
-        .usuario {
-            font-size: 1em;/* Tamaño de fuente normal */
-            color: #666;/* Color de texto gris */
-            margin-bottom: 15px;/* Espacio inferior */
-        }
-
-        .logout-btn {
-            background: #dc3545;/* Color de fondo rojo */
-            color: white;/* Color de texto blanco */
-            padding: 10px 20px;/* Espaciado interno */
-            text-decoration: none;/* Sin subrayado */
-            border-radius: 5px;/* Bordes redondeados */
-            font-size: 1em;/* Tamaño de fuente normal */
-            display: inline-block;/* Mostrar como bloque en línea */
-            transition: background 0.3s;/* Transición suave al pasar el ratón */
-        }
-
-        .logout-btn:hover {
-            background: #c82333;/* Color de fondo más oscuro al pasar el ratón */
-        }
-
-        /* Responsive para pantallas pequeñas */
-        @media (max-width: 768px) {/* Ajustes para móviles */
-            .bienvenida-completa h1 {/* Ajuste del tamaño de fuente */
-                font-size: 1.6em;/* Tamaño de fuente más pequeño */
-            }
-
-            .logout-btn {/* Ajuste del tamaño de botón */
-                font-size: 0.9em;/* Tamaño de fuente más pequeño */
-                padding: 8px 16px;/* Espaciado interno reducido */
-            }
-        }
-
         .bienvenida-completa {
             text-align: center;
             background: white;
-            padding: 20px;
-            margin-bottom: 40px; /* ⭐ separación con la tabla */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 50px;
+            padding: 30px;
+            padding: 0 20px;
         }
 
-        
+        .bienvenida-completa img {
+            max-width: 100%; /* La imagen no sobrepasará el ancho del contenedor */
+            height: auto; /* Mantiene la relación de aspecto */
+            max-height: 150px; /* Puedes ajustar el máximo de altura para que no se estire */
+            margin-bottom: 20px; /* Espacio debajo del logo */
+        }
 
-        /* 🔹 Botón de menú hamburguesa */
+        .bienvenida-completa h1 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .usuario {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .bienvenida-completa h1 {
+                font-size: 1.6em;
+            }
+
+            .logout-btn {
+                font-size: 0.9em;
+                padding: 8px 16px;
+            }
+
+            .bienvenida-completa img {
+                max-height: 120px; /* Reduces la altura máxima del logo en pantallas más pequeñas */
+            }
+        }
+
         .menu-hamburguesa {
             position: fixed;
             top: 15px;
@@ -114,7 +93,7 @@
         .dropdown-menu {
             display: none;
             position: fixed;
-            top: 50px; /* Debajo del botón */
+            top: 50px;
             right: 15px;
             background-color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -124,7 +103,6 @@
             min-width: 150px;
         }
 
-        /* Opciones del menú */
         .dropdown-menu a {
             padding: 10px 15px;
             display: block;
@@ -137,8 +115,6 @@
             background-color: #f0f0f0;
         }
 
-
-        /* Ajustes para móviles */
         @media (max-width: 768px) {
             .menu-hamburguesa {
                 font-size: 26px;
@@ -146,11 +122,9 @@
             }
         }
 
-
     </style>
 </head>
 <body>
-
 
     <div class="menu-hamburguesa" onclick="toggleMenu()">
         ☰
@@ -171,14 +145,13 @@
         }
     </script>
 
-
-    
-
+    <!-- Aquí agregamos el logo -->
     <div class="bienvenida-completa">
-        <h1>ADMIN {{ username.capitalize() }}</h1>
+        <img src="static/images/Logo_xuquer_Movil.jpg" alt="Logo de la Empresa">
+        <h1>Bienvenido, Administrador</h1>
+        <div class="usuario">Usuario: {{ usuario }}</div>
         <a href="/logout" class="logout-btn">Cerrar sesión</a>
     </div>
-
 
 </body>
 </html>

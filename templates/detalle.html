@@ -4,381 +4,471 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Reseteo universal: elimina márgenes, padding y configura box-sizing para todos los elementos */
+        /* Reseteo universal */
     * { 
-        margin: 0; /* Elimina todos los márgenes por defecto */
-        padding: 0; /* Elimina todos los paddings por defecto */
-        box-sizing: border-box; /* Hace que width y height incluyan padding y border */
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    /* Estilos del body (cuerpo de la página) */
     body { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Define la fuente principal */
-        background: #f5f5f5; /* Color de fondo gris claro */
-        font-size: 13px; /* Tamaño de fuente base */
-        overflow-x: hidden; /* Oculta el scroll horizontal si hay contenido que se desborda */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        font-size: 13px;
+        overflow-x: hidden;
     }
 
-    /* Cabecera principal de la página */
     .header { 
-        background: #2b579a; /* Color de fondo azul oscuro */
-        color: white; /* Color de texto blanco */
-        padding: 8px 12px; /* Espaciado interno: 8px arriba/abajo, 12px izquierda/derecha */
-        display: flex; /* Usa flexbox para alinear elementos */
-        align-items: center; /* Centra verticalmente los elementos */
-        gap: 10px; /* Espacio de 10px entre elementos flexbox */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Sombra: 2px hacia abajo, 4px difuminado, negro 20% opacidad */
+        background: #2b579a;
+        color: white;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    /* Botón de volver */
     .volver-btn { 
-        background: rgba(255,255,255,0.2); /* Fondo blanco con 20% de opacidad (translúcido) */
-        color: white; /* Texto blanco */
-        padding: 5px 10px; /* Espaciado interno: 5px arriba/abajo, 10px izquierda/derecha */
-        text-decoration: none; /* Elimina el subrayado del enlace */
-        border-radius: 3px; /* Bordes redondeados de 3px */
-        font-size: 12px; /* Tamaño de fuente pequeño */
-        border: 1px solid rgba(255,255,255,0.3); /* Borde blanco con 30% opacidad */
+        background: rgba(255,255,255,0.2);
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 12px;
+        border: 1px solid rgba(255,255,255,0.3);
     }
 
-    /* Estado hover (al pasar el ratón) del botón volver */
     .volver-btn:hover { 
-        background: rgba(255,255,255,0.3); /* Aumenta la opacidad del fondo a 30% */
+        background: rgba(255,255,255,0.3);
     }
 
-    /* Barra de herramientas */
     .toolbar {
-        background: #217346; /* Color verde oscuro (estilo Excel) */
-        color: white; /* Texto blanco */
-        padding: 6px 12px; /* Espaciado interno: 6px arriba/abajo, 12px izquierda/derecha */
-        font-size: 12px; /* Tamaño de fuente pequeño */
-        display: flex; /* Usa flexbox */
-        justify-content: space-between; /* Distribuye elementos en los extremos */
-        align-items: center; /* Centra verticalmente */
+        background: #217346;
+        color: white;
+        padding: 6px 12px;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    /* Contenedor de búsqueda */
     .search-container {
-        background: white; /* Fondo blanco */
-        padding: 8px 12px; /* Espaciado interno */
-        border-bottom: 2px solid #217346; /* Borde inferior verde de 2px */
+        background: white;
+        padding: 8px 12px;
+        border-bottom: 2px solid #217346;
     }
 
-    /* Input de búsqueda dentro del contenedor */
     .search-container input {
-        width: 100%; /* Ocupa todo el ancho disponible */
-        padding: 6px 10px; /* Espaciado interno */
-        border: 1px solid #d0d0d0; /* Borde gris claro */
-        font-size: 13px; /* Tamaño de fuente */
-        border-radius: 2px; /* Bordes ligeramente redondeados */
+        width: 100%;
+        padding: 6px 10px;
+        border: 1px solid #d0d0d0;
+        font-size: 13px;
+        border-radius: 2px;
     }
 
-    /* Contenedor de la tabla con scroll horizontal */
     .table-container {
-        overflow-x: auto; /* Permite scroll horizontal si la tabla es muy ancha */
-        background: white; /* Fondo blanco */
+        overflow-x: auto;
+        background: white;
     }
 
-    /* Estilos de la tabla */
     table {
-        width: 100%; /* La tabla ocupa todo el ancho del contenedor */
-        border-collapse: collapse; /* Elimina espacios entre bordes de celdas */
-        background: white; /* Fondo blanco */
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
     }
 
-    /* Cabecera de la tabla (thead) */
     thead {
-        background: #217346; /* Fondo verde (estilo Excel) */
-        color: white; /* Texto blanco */
-        position: sticky; /* La cabecera permanece fija al hacer scroll */
-        top: 0; /* Se pega a la parte superior */
-        z-index: 10; /* Aparece por encima de otros elementos */
+        background: #217346;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
-    /* Celdas de encabezado (th) */
     th {
-        padding: 8px 6px; /* Espaciado interno */
-        text-align: left; /* Alinea el texto a la izquierda */
-        font-weight: 600; /* Texto semi-negrita */
-        font-size: 11px; /* Tamaño de fuente pequeño */
-        border: 1px solid #1a5c37; /* Borde verde más oscuro */
-        white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+        padding: 8px 6px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 11px;
+        border: 1px solid #1a5c37;
+        white-space: nowrap;
     }
 
-    /* Celdas de datos (td) */
     td {
-        padding: 4px 6px; /* Espaciado interno reducido */
-        border: 1px solid #d0d0d0; /* Borde gris claro */
-        background: white; /* Fondo blanco */
-        vertical-align: top; /* Alinea el contenido en la parte superior */
+        padding: 4px 6px;
+        border: 1px solid #d0d0d0;
+        background: white;
+        vertical-align: top;
     }
 
-    /* Efecto hover en las filas: cambia color al pasar el ratón */
     tr:hover td {
-        background: #fff9e6; /* Fondo amarillo claro al pasar el ratón */
+        background: #fff9e6;
     }
 
-    /* Celda de encabezado de fila (números de fila estilo Excel) */
     .row-header {
-        background: #f0f0f0; /* Fondo gris claro */
-        font-weight: 600; /* Texto semi-negrita */
-        font-size: 11px; /* Tamaño de fuente pequeño */
-        text-align: center; /* Texto centrado */
-        width: 40px; /* Ancho fijo de 40px */
-        color: #444; /* Color de texto gris oscuro */
+        background: #f0f0f0;
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+        width: 40px;
+        color: #444;
     }
 
-    /* Estilos para inputs de texto, selects y textareas */
     input[type="text"], select, textarea {
-        width: 100%; /* Ocupa todo el ancho disponible */
-        padding: 3px 5px; /* Espaciado interno mínimo */
-        border: 1px solid #d0d0d0; /* Borde gris claro */
-        font-size: 12px; /* Tamaño de fuente */
-        font-family: inherit; /* Hereda la fuente del padre */
-        background: white; /* Fondo blanco */
+        width: 100%;
+        padding: 3px 5px;
+        border: 1px solid #d0d0d0;
+        font-size: 12px;
+        font-family: inherit;
+        background: white;
     }
 
-    /* Estado focus (cuando el usuario hace clic en el input) */
     input[type="text"]:focus, select:focus, textarea:focus {
-        outline: 2px solid #217346; /* Borde verde de 2px cuando está activo */
-        border-color: #217346; /* Cambia el color del borde a verde */
+        outline: 2px solid #217346;
+        border-color: #217346;
     }
 
-    /* Estilos específicos para select */
     select {
-        padding: 3px 3px; /* Padding reducido para selects */
+        padding: 3px 3px;
     }
 
-    /* Estilos específicos para textarea */
     textarea {
-        min-height: 40px; /* Altura mínima de 40px */
-        resize: vertical; /* Permite redimensionar solo verticalmente */
-        font-family: inherit; /* Hereda la fuente del padre */
+        min-height: 40px;
+        resize: vertical;
+        font-family: inherit;
     }
 
-    /* Celda que contiene botones */
     .btn-cell {
-        text-align: center; /* Centra el contenido */
-        white-space: nowrap; /* Evita saltos de línea */
-        width: 200px; /* Ancho fijo de 200px */
+        text-align: center;
+        white-space: nowrap;
+        width: 200px;
     }
 
-    /* Grupo de botones alineados horizontalmente */
     .btn-group {
-        display: flex; /* Usa flexbox */
-        gap: 3px; /* Espacio de 3px entre botones */
-        justify-content: center; /* Centra los botones */
+        display: flex;
+        gap: 3px;
+        justify-content: center;
     }
 
-    /* Estilos base para todos los botones */
     .btn {
-        padding: 4px 8px; /* Espaciado interno */
-        border: none; /* Sin borde */
-        border-radius: 2px; /* Bordes ligeramente redondeados */
-        font-size: 11px; /* Tamaño de fuente pequeño */
-        cursor: pointer; /* Cambia el cursor a manita al pasar por encima */
-        color: white; /* Texto blanco */
-        font-weight: 500; /* Texto medio-negrita */
-        white-space: nowrap; /* Evita saltos de línea en el texto del botón */
+        padding: 4px 8px;
+        border: none;
+        border-radius: 2px;
+        font-size: 11px;
+        cursor: pointer;
+        color: white;
+        font-weight: 500;
+        white-space: nowrap;
     }
 
-    /* Efecto hover genérico para botones */
     .btn:hover { 
-        opacity: 0.85; /* Reduce la opacidad a 85% al pasar el ratón */
+        opacity: 0.85;
     }
 
-    /* Botón de guardar (verde) */
     .btn-save { 
-        background: #217346; /* Fondo verde */
+        background: #217346;
     }
 
-    /* Botón de eliminar (rojo) */
     .btn-delete { 
-        background: #c00000; /* Fondo rojo */
+        background: #c00000;
     }
 
-    /* Botón de detalles (azul) */
     .btn-details { 
-        background: #0078d4; /* Fondo azul */
+        background: #0078d4;
     }
 
-    /* Fila expandida (cuando se muestran detalles) */
     .expanded-row {
-        background: #f8f8f8; /* Fondo gris muy claro */
+        background: #f8f8f8;
     }
 
-    /* Contenido de la fila expandida */
     .expanded-content {
-        padding: 8px; /* Espaciado interno */
-        display: grid; /* Usa CSS Grid */
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columnas responsivas: mínimo 250px, se ajustan automáticamente */
-        gap: 8px; /* Espacio de 8px entre elementos del grid */
+        padding: 8px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 8px;
     }
 
-    /* Grupo de campo (label + input) */
     .field-group {
-        display: flex; /* Usa flexbox */
-        flex-direction: column; /* Apila elementos verticalmente */
-        gap: 3px; /* Espacio de 3px entre label e input */
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
     }
 
-    /* Etiqueta de campo */
     .field-label {
-        font-size: 11px; /* Tamaño de fuente pequeño */
-        font-weight: 600; /* Texto semi-negrita */
-        color: #444; /* Color gris oscuro */
+        font-size: 11px;
+        font-weight: 600;
+        color: #444;
     }
 
-    /* Botón flotante para agregar fila (FAB - Floating Action Button) */
     .add-row-btn {
-        position: fixed; /* Posición fija en la pantalla */
-        bottom: 20px; /* 20px desde el borde inferior */
-        right: 20px; /* 20px desde el borde derecho */
-        width: 50px; /* Ancho de 50px */
-        height: 50px; /* Alto de 50px (botón circular) */
-        border-radius: 50%; /* Hace el botón completamente circular */
-        background: #217346; /* Fondo verde */
-        color: white; /* Texto/icono blanco */
-        border: none; /* Sin borde */
-        font-size: 24px; /* Tamaño de fuente grande para el símbolo + */
-        cursor: pointer; /* Cursor de manita */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Sombra: 4px abajo, 8px difuminado, negro 30% */
-        z-index: 100; /* Aparece por encima de otros elementos */
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #217346;
+        color: white;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        z-index: 100;
     }
 
-    /* Efecto hover del botón flotante */
     .add-row-btn:hover {
-        background: #1a5c37; /* Verde más oscuro */
-        transform: scale(1.05); /* Aumenta el tamaño 5% */
+        background: #1a5c37;
+        transform: scale(1.05);
     }
 
-    /* Modal (ventana emergente) - oculto por defecto */
     .modal {
-        display: none; /* Oculto inicialmente */
-        position: fixed; /* Posición fija que cubre toda la pantalla */
-        top: 0; /* Desde arriba */
-        left: 0; /* Desde la izquierda */
-        width: 100%; /* Ancho completo */
-        height: 100%; /* Alto completo */
-        background: rgba(0,0,0,0.5); /* Fondo negro semi-transparente (overlay) */
-        z-index: 1000; /* Aparece por encima de todo */
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
     }
 
-    /* Contenido del modal (caja blanca) */
     .modal-content {
-        background: white; /* Fondo blanco */
-        margin: 5% auto; /* 5% desde arriba, centrado horizontalmente */
-        padding: 0; /* Sin padding (se aplica a secciones internas) */
-        width: 90%; /* 90% del ancho de la pantalla */
-        max-width: 600px; /* Ancho máximo de 600px */
-        border-radius: 4px; /* Bordes redondeados */
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3); /* Sombra pronunciada */
+        background: white;
+        margin: 5% auto;
+        padding: 0;
+        width: 90%;
+        max-width: 600px;
+        border-radius: 4px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
-    /* Cabecera del modal */
     .modal-header {
-        background: #217346; /* Fondo verde */
-        color: white; /* Texto blanco */
-        padding: 12px 15px; /* Espaciado interno */
-        display: flex; /* Usa flexbox */
-        justify-content: space-between; /* Título a la izquierda, botón cerrar a la derecha */
-        align-items: center; /* Centra verticalmente */
+        background: #217346;
+        color: white;
+        padding: 12px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    /* Título del modal */
     .modal-title {
-        font-size: 16px; /* Tamaño de fuente */
-        font-weight: 600; /* Texto semi-negrita */
+        font-size: 16px;
+        font-weight: 600;
     }
 
-    /* Botón de cerrar modal (X) */
     .close-btn {
-        background: transparent; /* Sin fondo */
-        border: none; /* Sin borde */
-        color: white; /* Símbolo blanco */
-        font-size: 24px; /* Tamaño grande */
-        cursor: pointer; /* Cursor de manita */
-        width: 30px; /* Ancho */
-        height: 30px; /* Alto */
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
     }
 
-    /* Cuerpo del modal (contenido principal) */
     .modal-body {
-        padding: 15px; /* Espaciado interno */
+        padding: 15px;
     }
 
-    /* Fila de formulario */
     .form-row {
-        margin-bottom: 12px; /* Espacio entre campos del formulario */
+        margin-bottom: 12px;
     }
 
-    /* Etiqueta de formulario */
     .form-label {
-        display: block; /* Ocupa toda la línea */
-        font-weight: 600; /* Texto semi-negrita */
-        margin-bottom: 4px; /* Espacio debajo de la etiqueta */
-        font-size: 12px; /* Tamaño de fuente */
-        color: #333; /* Color gris oscuro */
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+        font-size: 12px;
+        color: #333;
     }
 
-    /* Control de formulario (input) */
     .form-control {
-        width: 100%; /* Ancho completo */
-        padding: 6px 8px; /* Espaciado interno */
-        border: 1px solid #d0d0d0; /* Borde gris claro */
-        font-size: 13px; /* Tamaño de fuente */
-        border-radius: 2px; /* Bordes ligeramente redondeados */
+        width: 100%;
+        padding: 6px 8px;
+        border: 1px solid #d0d0d0;
+        font-size: 13px;
+        border-radius: 2px;
     }
 
-    /* Estado focus de controles de formulario */
     .form-control:focus {
-        outline: 2px solid #217346; /* Borde verde de 2px */
-        border-color: #217346; /* Cambia color del borde a verde */
+        outline: 2px solid #217346;
+        border-color: #217346;
     }
 
-    /* Pie del modal */
     .modal-footer {
-        padding: 12px 15px; /* Espaciado interno */
-        background: #f5f5f5; /* Fondo gris claro */
-        border-top: 1px solid #d0d0d0; /* Borde superior gris */
-        text-align: right; /* Alinea contenido a la derecha */
+        padding: 12px 15px;
+        background: #f5f5f5;
+        border-top: 1px solid #d0d0d0;
+        text-align: right;
     }
 
-    /* Botón de envío de formulario */
     .btn-submit {
-        background: #217346; /* Fondo verde */
-        color: white; /* Texto blanco */
-        padding: 8px 20px; /* Espaciado interno */
-        border: none; /* Sin borde */
-        border-radius: 2px; /* Bordes ligeramente redondeados */
-        font-size: 13px; /* Tamaño de fuente */
-        cursor: pointer; /* Cursor de manita */
-        font-weight: 600; /* Texto semi-negrita */
+        background: #217346;
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 2px;
+        font-size: 13px;
+        cursor: pointer;
+        font-weight: 600;
     }
 
-    /* Efecto hover del botón submit */
     .btn-submit:hover {
-        background: #1a5c37; /* Verde más oscuro */
+        background: #1a5c37;
     }
 
-    /* Celda con información que puede ser muy larga */
     .info-cell {
-        max-width: 150px; /* Ancho máximo de 150px */
-        overflow: hidden; /* Oculta el contenido que se desborda */
-        text-overflow: ellipsis; /* Muestra "..." cuando el texto es muy largo */
-        white-space: nowrap; /* Evita saltos de línea */
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    /* Media query: estilos para pantallas pequeñas (móviles) */
+    /* Media query mejorado para móviles */
     @media (max-width: 768px) {
-        /* Reduce tamaños en pantallas menores a 768px */
-        th, td {
-            font-size: 11px; /* Fuente más pequeña */
-            padding: 3px 4px; /* Padding reducido */
+        body {
+            font-size: 12px;
         }
+
+        .header {
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+
+        .volver-btn {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        .toolbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            padding: 6px 8px;
+            font-size: 11px;
+        }
+
+        .search-container {
+            padding: 6px 8px;
+        }
+
+        .search-container input {
+            padding: 5px 8px;
+            font-size: 12px;
+        }
+
+        /* Ocultar columna de cabecera en móvil */
+        .row-header {
+            display: none;
+        }
+
+        th, td {
+            font-size: 10px;
+            padding: 4px 4px;
+        }
+
+        /* Ajustar anchos mínimos en móvil */
+        th[style*="min-width"] {
+            min-width: 100px !important;
+        }
+
+        .btn-cell {
+            width: auto;
+            min-width: 140px;
+        }
+
+        .btn-group {
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+
         .btn {
-            padding: 3px 6px; /* Botones más pequeños */
-            font-size: 10px; /* Fuente más pequeña */
+            padding: 4px 6px;
+            font-size: 9px;
+        }
+
+        /* Ajustar contenido expandido en móvil */
+        .expanded-content {
+            grid-template-columns: 1fr;
+            padding: 6px;
+        }
+
+        .field-label {
+            font-size: 10px;
+        }
+
+        textarea {
+            min-height: 50px;
+            font-size: 11px;
+        }
+
+        input[type="text"], select {
+            font-size: 11px;
+            padding: 4px;
+        }
+
+        /* Ajustar botón flotante en móvil */
+        .add-row-btn {
+            width: 45px;
+            height: 45px;
+            bottom: 15px;
+            right: 15px;
+            font-size: 20px;
+        }
+
+        /* Ajustar modal en móvil */
+        .modal-content {
+            width: 95%;
+            margin: 10% auto;
+        }
+
+        .modal-header {
+            padding: 10px 12px;
+        }
+
+        .modal-title {
+            font-size: 14px;
+        }
+
+        .modal-body {
+            padding: 12px;
+        }
+
+        .form-label {
+            font-size: 11px;
+        }
+
+        .form-control {
+            font-size: 12px;
+            padding: 5px 6px;
+        }
+
+        .btn-submit {
+            padding: 6px 16px;
+            font-size: 12px;
+        }
+    }
+
+    /* Media query para pantallas muy pequeñas */
+    @media (max-width: 480px) {
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .btn-cell {
+            min-width: 120px;
+        }
+
+        .btn {
+            padding: 3px 5px;
+            font-size: 8px;
+        }
+
+        th, td {
+            font-size: 9px;
+            padding: 3px 2px;
         }
     }
     </style>
@@ -552,6 +642,7 @@
 
         return `
             <tr data-id="${det.id}">
+                <td class="row-header">${index}</td>
                 <td>
                     <form id="form-${det.id}" action="/actualizar_det/${det.id}" method="post" style="margin: 0;">
                         <select name="id_infotipo" required>${options}</select>
