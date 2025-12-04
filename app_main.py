@@ -12,6 +12,8 @@ from flask import session, redirect
 from fpdf import FPDF
 from flask import jsonify
 from config import Config
+from flask import request, redirect
+
 
 Config.validate()  # Validar al inicio
 
@@ -429,17 +431,20 @@ def detalle_2(referencia):
     cursor.execute(sql_detalles, (referencia,))
     detalles = cursor.fetchall()
 
-    # Obtener todas las referencias para el select
     cursor.execute("SELECT id,nombre FROM public.infotipo ORDER BY id ASC;")
-    referencias = cursor.fetchall()
+    referencias_tipo = cursor.fetchall()
+    
+    cursor.execute("SELECT id, referencia FROM public.infocab ORDER BY id ASC;")
+    referencias_cabeceras = cursor.fetchall()
 
     cursor.close()
 
     return render_template(
             'detalle_2.html',
             detalles=detalles,
-            referencias=referencias,
+            referencias_tipo=referencias_tipo,
             referencia=referencia,   # <-- este es el cambio clave
+            referencias_cabeceras=referencias_cabeceras,
             username=session.get('current_user')
         )
 
@@ -481,7 +486,11 @@ def detalles():
 
         sql = "SELECT id,nombre FROM public.infotipo ORDER BY id ASC"
         cursor.execute(sql)
-        referencias = cursor.fetchall()
+        referencias_tipo = cursor.fetchall()
+
+        sql = "SELECT id, referencia FROM public.infocab ORDER BY id ASC"
+        cursor.execute(sql)
+        referencias_cabeceras = cursor.fetchall()
 
     except Exception as e:
         em.database.rollback()  # <-- esto reinicia la transacción
@@ -491,7 +500,7 @@ def detalles():
     cursor.close()
 
 
-    return render_template('detalle.html', detalles=detalles, username=session.get('current_user'), referencias=referencias)
+    return render_template('detalle.html', detalles=detalles, username=session.get('current_user'), referencias_tipo=referencias_tipo, referencias_cabeceras=referencias_cabeceras)
 
  
 ##Buscador de detalles.
@@ -501,13 +510,12 @@ def detalles():
 def api_detalles():
     if not session.get('authenticated') or session.get('rol') != 'admin':
         return jsonify({'error': 'No autorizado'}), 403
-
+    
     referencia_filtro = request.args.get('referencia', '').strip()
     filtro = request.args.get('q', '').strip().lower()
     tipo_filtro = request.args.get('tipo', '').strip()
-
+    
     cursor = em.database.cursor()
-
     sql = """
         SELECT 
         infodet.id,
@@ -527,24 +535,35 @@ def api_detalles():
         WHERE infocab.referencia = %s
     """
     params = [referencia_filtro]
-
+    
+    # CAMBIO CLAVE: Buscar en referencia O en tipo
     if filtro:
-        sql += """
-            AND LOWER(infodet.referencia) LIKE %s
-        """
+        sql += " AND (LOWER(infodet.referencia) LIKE %s OR LOWER(infotipo.nombre) LIKE %s)"
         filtro_param = f'%{filtro}%'
         params.append(filtro_param)
-
-    if tipo_filtro:
+        params.append(filtro_param)  # Se usa dos veces: una para referencia, otra para tipo
+    
+    # Filtro adicional por dropdown de tipo (si lo mantuvieras)
+    if tipo_filtro and tipo_filtro.isdigit():
         sql += " AND infodet.id_tipo = %s"
-        params.append(tipo_filtro)
-
+        params.append(int(tipo_filtro))
+    
+    print(f"Filtro búsqueda recibido: '{filtro}'")
+    print(f"SQL final: {sql}")
+    print(f"Parámetros: {params}")
+    
     sql += " ORDER BY infocab.referencia ASC;"
-
-    cursor.execute(sql, tuple(params))
-    detalles = cursor.fetchall()
-    cursor.close()
-
+    
+    try:
+        cursor.execute(sql, tuple(params))
+        detalles = cursor.fetchall()
+    except Exception as e:
+        print(f"Error en consulta: {e}")
+        cursor.close()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+    
     data = [{
         'id': d[0],
         'id_infotipo': d[1],
@@ -556,12 +575,79 @@ def api_detalles():
         'id_infocab': d[7],
         'tipo_nombre': d[8]
     } for d in detalles]
-
-    print("Detalles obtenidos:", data)  # Depuración
-
+    
+    print(f"Detalles encontrados: {len(data)}")
     return jsonify(data)
 
 
+@app.route('/api/detalles_todos', methods=['GET'])
+@login_required
+def api_detalles_todos():
+    if not session.get('authenticated') or session.get('rol') != 'admin':
+        return jsonify({'error': 'No autorizado'}), 403
+    
+    filtro = request.args.get('q', '').strip().lower()
+    
+    cursor = em.database.cursor()
+    sql = """
+        SELECT 
+        infodet.id,
+        infodet.id_tipo,
+        infodet.referencia,
+        infodet.desc1,
+        infodet.desc2,
+        infodet.notas,
+        infocab.referencia,
+        infodet.id_infocab,
+        infotipo.nombre
+        FROM public.infodet
+        INNER JOIN public.infocab 
+            ON infodet.id_infocab = infocab.id
+        INNER JOIN public.infotipo 
+            ON infodet.id_tipo = infotipo.id
+    """
+    params = []
+    
+    # Búsqueda global en: referencia detalle, tipo, y cabecera
+    if filtro:
+        sql += """ WHERE (
+            LOWER(infodet.referencia) LIKE %s 
+            OR LOWER(infotipo.nombre) LIKE %s
+            OR LOWER(infocab.referencia) LIKE %s
+        )"""
+        filtro_param = f'%{filtro}%'
+        params.extend([filtro_param, filtro_param, filtro_param])
+    
+    sql += " ORDER BY infocab.referencia ASC, infodet.id ASC;"
+    
+    print(f"Filtro búsqueda global: '{filtro}'")
+    print(f"SQL: {sql}")
+    print(f"Parámetros: {params}")
+    
+    try:
+        cursor.execute(sql, tuple(params))
+        detalles = cursor.fetchall()
+    except Exception as e:
+        print(f"Error en consulta: {e}")
+        cursor.close()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+    
+    data = [{
+        'id': d[0],
+        'id_infotipo': d[1],
+        'referencia': d[2],
+        'desc1': d[3],
+        'desc2': d[4],
+        'notas': d[5],
+        'cabecera_referencia': d[6],
+        'id_infocab': d[7],
+        'tipo_nombre': d[8]
+    } for d in detalles]
+    
+    print(f"Total detalles encontrados: {len(data)}")
+    return jsonify(data)
 
 
 @app.route('/actualizar_det/<int:id>', methods=['POST'])
@@ -575,8 +661,10 @@ def actualizar_det(id):
         notas = request.form.get('notas')
         id_infocab_ref = request.form.get('id_infocab')
 
+        # Obtener el id real de infocab basado en la referencia proporcionada
         cursor = em.database.cursor()
         cursor.execute("SELECT id, referencia FROM public.infocab WHERE id = %s;", (id_infocab_ref,))
+        
         infocab_data = cursor.fetchone()
         cursor.close()
 
@@ -601,7 +689,7 @@ def actualizar_det(id):
         cursor.close()
 
         print("Registro actualizado correctamente.")
-        return redirect(url_for('detalle_2', referencia=infocab_data[1]))
+        return redirect(request.referrer)
 
     except Exception as e:
         em.database.rollback()
@@ -635,8 +723,7 @@ def eliminar_det(id):
     em.database.commit()
     cursor.close()
 
-    return redirect(url_for('detalle_2', referencia=onanem))
-
+    return redirect(request.referrer)
 
 @app.route('/agregar_det', methods=['POST'])
 def agregar_det():

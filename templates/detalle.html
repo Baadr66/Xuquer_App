@@ -10,14 +10,12 @@
         padding: 0;
         box-sizing: border-box;
     }
-
     body { 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: #f5f5f5;
         font-size: 13px;
         overflow-x: hidden;
     }
-
     .header { 
         background: #2b579a;
         color: white;
@@ -27,7 +25,6 @@
         gap: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
-
     .volver-btn { 
         background: rgba(255,255,255,0.2);
         color: white;
@@ -37,11 +34,9 @@
         font-size: 12px;
         border: 1px solid rgba(255,255,255,0.3);
     }
-
     .volver-btn:hover { 
         background: rgba(255,255,255,0.3);
     }
-
     .toolbar {
         background: #217346;
         color: white;
@@ -51,13 +46,11 @@
         justify-content: space-between;
         align-items: center;
     }
-
     .search-container {
         background: white;
         padding: 8px 12px;
         border-bottom: 2px solid #217346;
     }
-
     .search-container input {
         width: 100%;
         padding: 6px 10px;
@@ -65,18 +58,15 @@
         font-size: 13px;
         border-radius: 2px;
     }
-
     .table-container {
         overflow-x: auto;
         background: white;
     }
-
     table {
         width: 100%;
         border-collapse: collapse;
         background: white;
     }
-
     thead {
         background: #217346;
         color: white;
@@ -84,7 +74,6 @@
         top: 0;
         z-index: 10;
     }
-
     th {
         padding: 8px 6px;
         text-align: left;
@@ -93,27 +82,23 @@
         border: 1px solid #1a5c37;
         white-space: nowrap;
     }
-
     td {
         padding: 4px 6px;
         border: 1px solid #d0d0d0;
         background: white;
         vertical-align: top;
     }
-
     tr:hover td {
         background: #fff9e6;
     }
-
     .row-header {
         background: #f0f0f0;
         font-weight: 600;
         font-size: 11px;
         text-align: center;
-        width: 40px;
+        width: 100px;
         color: #444;
     }
-
     input[type="text"], select, textarea {
         width: 100%;
         padding: 3px 5px;
@@ -122,34 +107,28 @@
         font-family: inherit;
         background: white;
     }
-
     input[type="text"]:focus, select:focus, textarea:focus {
         outline: 2px solid #217346;
         border-color: #217346;
     }
-
     select {
         padding: 3px 3px;
     }
-
     textarea {
         min-height: 40px;
         resize: vertical;
         font-family: inherit;
     }
-
     .btn-cell {
         text-align: center;
         white-space: nowrap;
         width: 200px;
     }
-
     .btn-group {
         display: flex;
         gap: 3px;
         justify-content: center;
     }
-
     .btn {
         padding: 4px 8px;
         border: none;
@@ -160,46 +139,37 @@
         font-weight: 500;
         white-space: nowrap;
     }
-
     .btn:hover { 
         opacity: 0.85;
     }
-
     .btn-save { 
         background: #217346;
     }
-
     .btn-delete { 
         background: #c00000;
     }
-
     .btn-details { 
         background: #0078d4;
     }
-
     .expanded-row {
         background: #f8f8f8;
     }
-
     .expanded-content {
         padding: 8px;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 8px;
     }
-
     .field-group {
         display: flex;
         flex-direction: column;
         gap: 3px;
     }
-
     .field-label {
         font-size: 11px;
         font-weight: 600;
         color: #444;
     }
-
     .add-row-btn {
         position: fixed;
         bottom: 20px;
@@ -215,12 +185,10 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         z-index: 100;
     }
-
     .add-row-btn:hover {
         background: #1a5c37;
         transform: scale(1.05);
     }
-
     .modal {
         display: none;
         position: fixed;
@@ -231,7 +199,6 @@
         background: rgba(0,0,0,0.5);
         z-index: 1000;
     }
-
     .modal-content {
         background: white;
         margin: 5% auto;
@@ -241,7 +208,6 @@
         border-radius: 4px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
-
     .modal-header {
         background: #217346;
         color: white;
@@ -250,12 +216,10 @@
         justify-content: space-between;
         align-items: center;
     }
-
     .modal-title {
         font-size: 16px;
         font-weight: 600;
     }
-
     .close-btn {
         background: transparent;
         border: none;
@@ -265,15 +229,12 @@
         width: 30px;
         height: 30px;
     }
-
     .modal-body {
         padding: 15px;
     }
-
     .form-row {
         margin-bottom: 12px;
     }
-
     .form-label {
         display: block;
         font-weight: 600;
@@ -281,7 +242,6 @@
         font-size: 12px;
         color: #333;
     }
-
     .form-control {
         width: 100%;
         padding: 6px 8px;
@@ -289,19 +249,16 @@
         font-size: 13px;
         border-radius: 2px;
     }
-
     .form-control:focus {
         outline: 2px solid #217346;
         border-color: #217346;
     }
-
     .modal-footer {
         padding: 12px 15px;
         background: #f5f5f5;
         border-top: 1px solid #d0d0d0;
         text-align: right;
     }
-
     .btn-submit {
         background: #217346;
         color: white;
@@ -312,34 +269,28 @@
         cursor: pointer;
         font-weight: 600;
     }
-
     .btn-submit:hover {
         background: #1a5c37;
     }
-
     .info-cell {
         max-width: 150px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-
     /* Media query mejorado para móviles */
     @media (max-width: 768px) {
         body {
             font-size: 12px;
         }
-
         .header {
             padding: 6px 8px;
             font-size: 12px;
         }
-
         .volver-btn {
             padding: 4px 8px;
             font-size: 11px;
         }
-
         .toolbar {
             flex-direction: column;
             align-items: flex-start;
@@ -347,67 +298,50 @@
             padding: 6px 8px;
             font-size: 11px;
         }
-
         .search-container {
             padding: 6px 8px;
         }
-
         .search-container input {
             padding: 5px 8px;
             font-size: 12px;
         }
-
-        /* Ocultar columna de cabecera en móvil */
         .row-header {
-            display: none;
+            display: table-cell !important;
         }
-
         th, td {
             font-size: 10px;
             padding: 4px 4px;
         }
-
-        /* Ajustar anchos mínimos en móvil */
         th[style*="min-width"] {
             min-width: 100px !important;
         }
-
         .btn-cell {
             width: auto;
             min-width: 140px;
         }
-
         .btn-group {
             flex-wrap: wrap;
             gap: 2px;
         }
-
         .btn {
             padding: 4px 6px;
             font-size: 9px;
         }
-
-        /* Ajustar contenido expandido en móvil */
         .expanded-content {
             grid-template-columns: 1fr;
             padding: 6px;
         }
-
         .field-label {
             font-size: 10px;
         }
-
         textarea {
             min-height: 50px;
             font-size: 11px;
         }
-
         input[type="text"], select {
             font-size: 11px;
             padding: 4px;
         }
-
-        /* Ajustar botón flotante en móvil */
         .add-row-btn {
             width: 45px;
             height: 45px;
@@ -415,57 +349,44 @@
             right: 15px;
             font-size: 20px;
         }
-
-        /* Ajustar modal en móvil */
         .modal-content {
             width: 95%;
             margin: 10% auto;
         }
-
         .modal-header {
             padding: 10px 12px;
         }
-
         .modal-title {
             font-size: 14px;
         }
-
         .modal-body {
             padding: 12px;
         }
-
         .form-label {
             font-size: 11px;
         }
-
         .form-control {
             font-size: 12px;
             padding: 5px 6px;
         }
-
         .btn-submit {
             padding: 6px 16px;
             font-size: 12px;
         }
     }
-
-    /* Media query para pantallas muy pequeñas */
     @media (max-width: 480px) {
         .header {
             flex-direction: column;
             align-items: flex-start;
             gap: 5px;
         }
-
         .btn-cell {
             min-width: 120px;
         }
-
         .btn {
             padding: 3px 5px;
             font-size: 8px;
         }
-
         th, td {
             font-size: 9px;
             padding: 3px 2px;
@@ -474,21 +395,17 @@
     </style>
 </head>
 <body>
-
     <div class="header">
-        <a href="/cabecera" class="volver-btn">← Volver</a>
+        <a href="/admin" class="volver-btn">← Volver</a>
         <strong>{{ username.capitalize() }}</strong>
     </div>
-
     <div class="toolbar">
-        <span>📋 {{ referencia }}</span>
+        <span>📋 Todos los Detalles</span>
         <span id="recordCount">Registros: {{ detalles|length }}</span>
     </div>
-
     <div class="search-container">
-        <input type="text" id="searchDetalles" placeholder="🔍 Buscar en todos los campos..." />
+        <input type="text" id="searchDetalles" placeholder="🔍 Buscar por cabecera, tipo o referencia..." />
     </div>
-
     <div class="table-container">
         <table id="dataTable">
             <thead>
@@ -506,7 +423,7 @@
                     <td>
                         <form id="form-{{ det[0] }}" action="/actualizar_det/{{ det[0] }}" method="post" style="margin: 0;">
                             <select name="id_infotipo" required>
-                                {% for ref in referencias %}
+                                {% for ref in referencias_tipo %}
                                     <option value="{{ ref[0] }}" {% if ref[0] == det[1] %}selected{% endif %}>{{ ref[1] }}</option>
                                 {% endfor %}
                             </select>
@@ -528,7 +445,7 @@
                     </td>
                 </tr>
                 <tr id="details-{{ det[0] }}" class="expanded-row" style="display: none;">
-                    <td colspan="6">
+                    <td colspan="4">
                         <div class="expanded-content">
                             <div class="field-group">
                                 <label class="field-label">Descripción 1</label>
@@ -549,9 +466,7 @@
             </tbody>
         </table>
     </div>
-
     <button class="add-row-btn" onclick="openModal()">+</button>
-
     <div id="addModal" class="modal" onclick="closeModalOutside(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
@@ -560,40 +475,42 @@
             </div>
             
             <form action="/agregar_det" method="post">
-                <div class="modal-body">
-                    <input type="hidden" name="id_infocab" value="{{ detalles[0][7] if detalles else '' }}">
-                    
+                <div class="modal-body">                    
                     <div class="form-row">
-                        <label class="form-label">Tipo *</label>
-                        <select name="id_infotipo" class="form-control" required>
-                            <option value="" disabled selected>Seleccionar tipo...</option>
-                            {% for ref in referencias %}
+                        <label class="form-label">Cabecera *</label>
+                        <select name="id_infocab" class="form-control" required>
+                            <option value="" disabled selected>Seleccionar Cabecera...</option>
+                            {% for ref in referencias_cabeceras %}
                                 <option value="{{ ref[0] }}">{{ ref[1] }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
+                    <div class="form-row">
+                        <label class="form-label">Tipo *</label>
+                        <select name="id_infotipo" class="form-control" required>
+                            <option value="" disabled selected>Seleccionar tipo...</option>
+                            {% for ref in referencias_tipo %}
+                                <option value="{{ ref[0] }}">{{ ref[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <div class="form-row">
                         <label class="form-label">Referencia *</label>
                         <input type="text" name="referencia" class="form-control" placeholder="Ingrese referencia" required>
                     </div>
-
                     <div class="form-row">
                         <label class="form-label">Descripción 1</label>
                         <textarea name="desc1" class="form-control" placeholder="Descripción 1 (opcional)" rows="2"></textarea>
                     </div>
-
                     <div class="form-row">
                         <label class="form-label">Descripción 2</label>
                         <textarea name="desc2" class="form-control" placeholder="Descripción 2 (opcional)" rows="2"></textarea>
                     </div>
-
                     <div class="form-row">
                         <label class="form-label">Notas</label>
                         <textarea name="notas" class="form-control" placeholder="Notas adicionales (opcional)" rows="2"></textarea>
                     </div>
                 </div>
-
                 <div class="modal-footer">
                     <button type="submit" class="btn-submit">Agregar Registro</button>
                 </div>
@@ -602,12 +519,14 @@
     </div>
 
 <script>
-
     const tipos = [
-        {% for ref in referencias %}
+        {% for ref in referencias_tipo %}
             { id: "{{ ref[0] }}", nombre: "{{ ref[1] }}" },
         {% endfor %}
     ];
+
+    console.log("🎯 Script inicializado");
+    console.log("📋 Tipos disponibles:", tipos);
 
     function toggleDetails(id) {
         const detailsRow = document.getElementById("details-" + id);
@@ -635,72 +554,87 @@
         }
     }
 
-    function renderRow(det, index) {
+    function renderRow(det) {
         let options = tipos.map(t =>
             `<option value="${t.id}" ${t.id == det.id_infotipo ? "selected" : ""}>${t.nombre}</option>`
         ).join("");
 
-        return `
-            <tr data-id="${det.id}">
-                <td class="row-header">${index}</td>
-                <td>
-                    <form id="form-${det.id}" action="/actualizar_det/${det.id}" method="post" style="margin: 0;">
-                        <select name="id_infotipo" required>${options}</select>
-                </td>
-                <td>
-                    <input type="text" name="referencia" value="${det.referencia}" required>
-                    <input type="hidden" name="id_infocab" value="${det.id_infocab}">
-                </td>
-                <td class="btn-cell">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-details" onclick="toggleDetails(${det.id})">+Info</button>
-                        <button type="submit" class="btn btn-save">💾</button>
-                        <button type="button" class="btn btn-delete" onclick="eliminar(${det.id})">🗑</button>
-                    </div>
-                    </form>
-                    <form id="del-${det.id}" action="/eliminar_det/${det.id}" method="post" style="display:none;">
+        return `<tr data-id="${det.id}">
+                    <td class="row-header">${det.cabecera_referencia}</td>
+                    <td>
+                        <form id="form-${det.id}" action="/actualizar_det/${det.id}" method="post" style="margin: 0;">
+                            <select name="id_infotipo" required>
+                                ${options}
+                            </select>
+                    </td>
+                    <td>
+                        <input type="text" name="referencia" value="${det.referencia}" required>
                         <input type="hidden" name="id_infocab" value="${det.id_infocab}">
-                    </form>
-                </td>
-            </tr>
-            <tr id="details-${det.id}" class="expanded-row" style="display: none;">
-                <td colspan="6">
-                    <div class="expanded-content">
-                        <div class="field-group">
-                            <label class="field-label">Descripción 1</label>
-                            <textarea form="form-${det.id}" name="desc1">${det.desc1 || ""}</textarea>
+                    </td>
+                    <td class="btn-cell">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-details" onclick="toggleDetails(${det.id})">+Info</button>
+                            <button type="submit" class="btn btn-save">💾</button>
+                            <button type="button" class="btn btn-delete" onclick="eliminar(${det.id})">🗑</button>
                         </div>
-                        <div class="field-group">
-                            <label class="field-label">Descripción 2</label>
-                            <textarea form="form-${det.id}" name="desc2">${det.desc2 || ""}</textarea>
+                        </form>
+                        <form id="del-${det.id}" action="/eliminar_det/${det.id}" method="post" style="display:none;">
+                            <input type="hidden" name="id_infocab" value="${det.id_infocab}">
+                        </form>
+                    </td>
+                </tr>
+                <tr id="details-${det.id}" class="expanded-row" style="display: none;">
+                    <td colspan="4">
+                        <div class="expanded-content">
+                            <div class="field-group">
+                                <label class="field-label">Descripción 1</label>
+                                <textarea form="form-${det.id}" name="desc1" placeholder="Descripción 1">${det.desc1 || ""}</textarea>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Descripción 2</label>
+                                <textarea form="form-${det.id}" name="desc2" placeholder="Descripción 2">${det.desc2 || ""}</textarea>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Notas</label>
+                                <textarea form="form-${det.id}" name="notas" placeholder="Notas">${det.notas || ""}</textarea>
+                            </div>
                         </div>
-                        <div class="field-group">
-                            <label class="field-label">Notas</label>
-                            <textarea form="form-${det.id}" name="notas">${det.notas || ""}</textarea>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        `;
+                    </td>
+                </tr>`;
     }
 
+    // Búsqueda global
     document.getElementById("searchDetalles").addEventListener("keyup", async function () {
         const q = this.value.trim();
-        const tbody = document.getElementById("tableBody");
-        const id_infocab = document.getElementById("dataTable").closest('.table-container').previousElementSibling.previousElementSibling.dataset.infocab || "{{ detalles[0][7] if detalles else '' }}";
-
-        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center; padding:20px;'>🔍 Buscando...</td></tr>";
-
-        const response = await fetch(`/api/detalles?q=${encodeURIComponent(q)}&id_infocab=${id_infocab}`);
-        const data = await response.json();
-
-        tbody.innerHTML = "";
-        data.forEach((d, i) => tbody.innerHTML += renderRow(d, i + 1));
         
-        document.getElementById("recordCount").textContent = `Registros: ${data.length}`;
+        console.log("🔍 Buscando:", q);
+
+        const url = `/api/detalles_todos?q=${encodeURIComponent(q)}`;
+        console.log("🌐 URL:", url);
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            console.log("✅ Datos recibidos:", data);
+            
+            const contenedor = document.getElementById("tableBody");
+            contenedor.innerHTML = "";
+            
+            if (data.length === 0) {
+                contenedor.innerHTML = '<tr><td colspan="4" style="text-align:center;">No se encontraron resultados.</td></tr>';
+            } else {
+                data.forEach((det) => {
+                    contenedor.innerHTML += renderRow(det);
+                });
+            }
+            
+            document.getElementById("recordCount").innerText = `Registros: ${data.length}`;
+        } catch (error) {
+            console.error("❌ Error en la búsqueda:", error);
+            document.getElementById("tableBody").innerHTML = '<tr><td colspan="4" style="text-align:center;color:red;">Error al buscar</td></tr>';
+        }
     });
-
 </script>
-
 </body>
 </html>

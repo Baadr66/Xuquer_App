@@ -13,7 +13,6 @@
             box-sizing: border-box;
         }
 
-        /* Estilos del body */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
@@ -21,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* Cabecera principal */
         .header { 
             background: #2b579a;
             color: white;
@@ -32,7 +30,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Botón de volver */
         .volver-btn { 
             background: rgba(255,255,255,0.2);
             color: white;
@@ -47,7 +44,6 @@
             background: rgba(255,255,255,0.3);
         }
 
-        /* Barra de herramientas */
         .toolbar {
             background: #217346;
             color: white;
@@ -58,7 +54,6 @@
             align-items: center;
         }
 
-        /* Contenedor de búsqueda */
         .search-container {
             background: white;
             padding: 8px 12px;
@@ -73,13 +68,11 @@
             border-radius: 2px;
         }
 
-        /* Contenedor de la tabla */
         .table-container {
             overflow-x: auto;
             background: white;
         }
 
-        /* Estilos de la tabla */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -107,14 +100,22 @@
             padding: 4px 6px;
             border: 1px solid #d0d0d0;
             background: white;
-            vertical-align: middle;
+            vertical-align: top;
         }
 
         tr:hover td {
             background: #fff9e6;
         }
 
-        /* Inputs */
+        .row-header {
+            background: #f0f0f0;
+            font-weight: 600;
+            font-size: 11px;
+            text-align: center;
+            width: 50px;
+            color: #444;
+        }
+
         input[type="text"] {
             width: 100%;
             padding: 3px 5px;
@@ -129,34 +130,18 @@
             border-color: #217346;
         }
 
-        /* Celda de referencia con form */
-        td[data-label="Referencia"] form {
-            display: flex;
-            gap: 0;
-            width: 100%;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        td[data-label="Referencia"] input {
-            flex: 1;
-            max-width: 100%;
-        }
-
-        /* Celda de acciones */
-        td[data-label="Acciones"] {
+        .btn-cell {
             text-align: center;
             white-space: nowrap;
+            width: 200px;
         }
 
-        .center-content {
+        .btn-group {
             display: flex;
-            justify-content: center;
-            align-items: center;
             gap: 3px;
+            justify-content: center;
         }
 
-        /* Botones */
         .btn {
             padding: 4px 8px;
             border: none;
@@ -180,19 +165,15 @@
             background: #c00000;
         }
 
-        .btn-add { 
-            background: #217346;
-        }
-
         .btn-seemore { 
-            background: #73878a;
+            background: #0078d4;
+            font-weight: 600;
         }
 
         .btn-seemore:hover { 
-            background: #5a6d70;
+            background: #005a9e;
         }
 
-        /* Botón flotante */
         .add-row-btn {
             position: fixed;
             bottom: 20px;
@@ -214,7 +195,6 @@
             transform: scale(1.05);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -311,128 +291,67 @@
             background: #1a5c37;
         }
 
-        /* RESPONSIVE - Tablets */
+        /* Media query mejorado para móviles */
         @media (max-width: 768px) {
             body {
                 font-size: 12px;
             }
 
             .header {
-                padding: 6px 10px;
-                flex-wrap: wrap;
+                padding: 6px 8px;
+                font-size: 12px;
             }
 
             .volver-btn {
-                font-size: 11px;
                 padding: 4px 8px;
+                font-size: 11px;
             }
 
             .toolbar {
                 flex-direction: column;
-                gap: 5px;
                 align-items: flex-start;
-                padding: 8px 10px;
-            }
-
-            th, td {
-                font-size: 11px;
-                padding: 3px 4px;
-            }
-
-            .btn {
-                padding: 3px 6px;
-                font-size: 10px;
-            }
-
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
-        }
-
-        /* RESPONSIVE - Móviles */
-        @media (max-width: 600px) {
-            body {
-                font-size: 11px;
-            }
-
-            .header {
+                gap: 4px;
                 padding: 6px 8px;
-            }
-
-            .toolbar {
                 font-size: 11px;
-                padding: 6px 8px;
             }
 
             .search-container {
                 padding: 6px 8px;
             }
 
-            /* Tabla responsive - convertir a cards */
-            .table-container {
-                padding: 10px;
-            }
-
-            table, thead, tbody, th, td, tr { 
-                display: block; 
-            }
-            
-            thead { 
-                display: none; 
-            }
-
-            tr {
-                margin-bottom: 15px;
-                border: 1px solid #d0d0d0;
-                border-radius: 6px;
-                padding: 10px;
-                background: #fafafa;
-            }
-
-            tr:hover {
-                background: #fff9e6;
-            }
-
-            td {
-                border: none;
-                padding: 8px 0;
-                text-align: left;
-                display: block;
-                width: 100% !important;
-            }
-
-            td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: #217346;
-                font-size: 11px;
-                display: block;
-                margin-bottom: 5px;
-            }
-
-            td[data-label="Referencia"] form {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            td[data-label="Referencia"] input {
-                max-width: 100%;
-            }
-
-            .center-content {
-                flex-direction: column;
-                width: 100%;
-                gap: 5px;
-            }
-
-            .btn {
-                width: 100%;
-                padding: 8px;
+            .search-container input {
+                padding: 5px 8px;
                 font-size: 12px;
             }
 
-            /* Botón flotante más pequeño en móvil */
+            .row-header {
+                display: table-cell !important;
+            }
+
+            th, td {
+                font-size: 10px;
+                padding: 4px 4px;
+            }
+
+            th[style*="min-width"] {
+                min-width: 100px !important;
+            }
+
+            .btn-cell {
+                width: auto;
+                min-width: 140px;
+            }
+
+            .btn-group {
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+
+            .btn {
+                padding: 4px 6px;
+                font-size: 9px;
+            }
+
             .add-row-btn {
                 width: 45px;
                 height: 45px;
@@ -441,53 +360,63 @@
                 font-size: 20px;
             }
 
-            /* Modal a pantalla completa en móvil */
             .modal-content {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                border-radius: 0;
-                max-width: none;
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .modal-header {
+                padding: 10px 12px;
+            }
+
+            .modal-title {
+                font-size: 14px;
             }
 
             .modal-body {
                 padding: 12px;
-                max-height: calc(100vh - 120px);
-                overflow-y: auto;
             }
 
-            .form-row {
-                margin-bottom: 10px;
-            }
-        }
-
-        /* RESPONSIVE - Móviles pequeños */
-        @media (max-width: 400px) {
-            .header strong {
+            .form-label {
                 font-size: 11px;
             }
 
-            .toolbar {
-                font-size: 10px;
+            .form-control {
+                font-size: 12px;
+                padding: 5px 6px;
             }
 
-            .add-row-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
+            .btn-submit {
+                padding: 6px 16px;
+                font-size: 12px;
             }
         }
 
-        /* Mejoras de accesibilidad */
-        .btn:focus, input:focus {
-            outline: 2px solid #217346;
-            outline-offset: 2px;
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .btn-cell {
+                min-width: 120px;
+            }
+
+            .btn {
+                padding: 3px 5px;
+                font-size: 8px;
+            }
+
+            th, td {
+                font-size: 9px;
+                padding: 3px 2px;
+            }
         }
     </style>
 </head>
 
 <body>
-
     <div class="header">
         <a href="/admin" class="volver-btn">← Volver</a>
         <strong>{{ username.capitalize() }}</strong>
@@ -503,26 +432,29 @@
     </div>
 
     <div class="table-container">
-        <table>
+        <table id="dataTable">
             <thead>
                 <tr>
-                    <th>Referencia</th>
-                    <th>Acciones</th>
+                    <th class="row-header">#</th>
+                    <th style="min-width: 150px;">Referencia</th>
+                    <th style="width: 200px;">Acciones</th>
                 </tr>
             </thead>
             <tbody id="contenedorCabeceras">
                 {% for cab in cabeceras %}
-                <tr>
-                    <td data-label="Referencia">
-                        <form id="form-{{ cab[0] }}" action="/actualizar_cab/{{ cab[0] }}" method="post">
-                            <input type="text" name="referencia" value="{{ cab[0] }}">
-                        </form>
+                <tr data-id="{{ cab[0] }}">
+                    <td class="row-header">{{ loop.index }}</td>
+                    <td>
+                        <form id="form-{{ cab[0] }}" action="/actualizar_cab/{{ cab[0] }}" method="post" style="margin: 0;">
+                            <input type="text" name="referencia" value="{{ cab[0] }}" required>
                     </td>
-
-                    <td data-label="Acciones" class="center-content">
-                        <button type="submit" form="form-{{ cab[0] }}" formaction="/ver_mas_detalle/{{ cab[0] }}" formmethod="post" class="btn btn-seemore">Ver más</button>
-                        <button type="submit" form="form-{{ cab[0] }}" class="btn btn-save">💾 Guardar</button>
-                        <button type="submit" form="form-{{ cab[0] }}" formaction="/eliminar_cab/{{ cab[0] }}" formmethod="post" class="btn btn-delete">🗑 Eliminar</button>
+                    <td class="btn-cell">
+                        <div class="btn-group">
+                            <button type="submit" form="form-{{ cab[0] }}" formaction="/ver_mas_detalle/{{ cab[0] }}" formmethod="post" class="btn btn-seemore">Ver más</button>
+                            <button type="submit" form="form-{{ cab[0] }}" class="btn btn-save">💾 Guardar</button>
+                            <button type="submit" form="form-{{ cab[0] }}" formaction="/eliminar_cab/{{ cab[0] }}" formmethod="post" class="btn btn-delete">🗑 Eliminar</button>
+                        </div>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
@@ -555,6 +487,14 @@
     </div>
 
     <script>
+        console.log("🎯 Script inicializado");
+
+        function eliminar(referencia) {
+            if (confirm("¿Está seguro de eliminar esta cabecera?")) {
+                document.getElementById("del-" + referencia).submit();
+            }
+        }
+
         function openModal() {
             document.getElementById("addModal").style.display = "block";
         }
@@ -569,47 +509,59 @@
             }
         }
 
+        function renderRow(c) {
+            return `<tr data-id="${c.referencia}">
+                        <td class="row-header">${c.index}</td>
+                        <td>
+                            <form id="form-${c.referencia}" action="/actualizar_cab/${c.referencia}" method="post" style="margin: 0;">
+                                <input type="text" name="referencia" value="${c.referencia}" required>
+                        </td>
+                        <td class="btn-cell">
+                            <div class="btn-group">
+                                <button type="submit" formaction="/ver_mas_detalle/${c.referencia}" formmethod="post" class="btn btn-seemore">Ver más</button>
+                                <button type="submit" class="btn btn-save">💾</button>
+                                <button type="button" class="btn btn-delete" onclick="eliminar('${c.referencia}')">🗑</button>
+                            </div>
+                            </form>
+                            <form id="del-${c.referencia}" action="/eliminar_cab/${c.referencia}" method="post" style="display:none;"></form>
+                        </td>
+                    </tr>`;
+        }
+
+        // Búsqueda
         document.getElementById('buscarCabeceras').addEventListener('keyup', async function() {
             const q = this.value.trim();
             const contenedor = document.getElementById('contenedorCabeceras');
 
-            contenedor.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 15px; color: #666;">Buscando...</td></tr>';
+            console.log("🔍 Buscando:", q);
+
+            const url = `/api/cabeceras?q=${encodeURIComponent(q)}`;
+            console.log("🌐 URL:", url);
 
             try {
-                const response = await fetch(`/api/cabeceras?q=${encodeURIComponent(q)}`);
+                const response = await fetch(url);
                 const data = await response.json();
 
+                console.log("✅ Datos recibidos:", data);
+
                 if (!data.length) {
-                    contenedor.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 15px; color: #666;">No se encontraron resultados.</td></tr>';
+                    contenedor.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 15px; color: #666;">No se encontraron resultados.</td></tr>';
                     document.getElementById('recordCount').innerText = 'Registros: 0';
                     return;
                 }
 
                 contenedor.innerHTML = '';
 
-                data.forEach(c => {
-                    const fila = `
-                    <tr>
-                        <td data-label="Referencia">
-                            <form id="form-${c.referencia}" action="/actualizar_cab/${c.referencia}" method="post">
-                                <input type="text" name="referencia" value="${c.referencia}">
-                            </form>
-                        </td>
-                        <td data-label="Acciones" class="center-content">
-                            <button type="submit" form="form-${c.referencia}" formaction="/ver_mas_detalle/${c.referencia}" formmethod="post" class="btn btn-seemore">Ver más</button>
-                            <button type="submit" form="form-${c.referencia}" class="btn btn-save">💾 Guardar</button>
-                            <button type="submit" form="form-${c.referencia}" formaction="/eliminar_cab/${c.referencia}" formmethod="post" class="btn btn-delete">🗑 Eliminar</button>
-                        </td>
-                    </tr>
-                    `;
-                    contenedor.innerHTML += fila;
+                data.forEach((c, index) => {
+                    c.index = index + 1;
+                    contenedor.innerHTML += renderRow(c);
                 });
 
                 document.getElementById('recordCount').innerText = `Registros: ${data.length}`;
 
             } catch (err) {
-                console.error("Error al buscar cabeceras:", err);
-                contenedor.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 15px; color: #c00000;">Error al cargar los datos.</td></tr>';
+                console.error("❌ Error al buscar cabeceras:", err);
+                contenedor.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 15px; color: #c00000;">Error al cargar los datos.</td></tr>';
             }
         });
     </script>

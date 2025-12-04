@@ -399,7 +399,7 @@
         <input type="text" id="searchDetalles" placeholder="🔍 Buscar en todos los campos..." />
         <select id="filterTipo" class="form-control" style="margin-top: 8px;">
             <option value="">-- Filtrar por Tipo --</option>
-            {% for ref in referencias %}
+            {% for ref in referencias_tipo %}
                 <option value="{{ ref[0] }}">{{ ref[1] }}</option>
             {% endfor %}
         </select>
@@ -420,7 +420,7 @@
                     <td>
                         <form id="form-{{ det[0] }}" action="/actualizar_det/{{ det[0] }}" method="post" style="margin: 0;">
                             <select name="id_infotipo" required>
-                                {% for ref in referencias %}
+                                {% for ref in referencias_tipo %}
                                     <option value="{{ ref[0] }}" {% if ref[0] == det[1] %}selected{% endif %}>{{ ref[1] }}</option>
                                 {% endfor %}
                             </select>
@@ -479,14 +479,16 @@
                     
                     <div class="form-row">
                         <label class="form-label">Tipo *</label>
+
+
                         <select name="id_infotipo" class="form-control" required>
                             <option value="" disabled selected>Seleccionar tipo...</option>
-                            {% for ref in referencias %}
+                            {% for ref in referencias_tipo %}
+                                <P> {{ ref }}</P>
                                 <option value="{{ ref[0] }}">{{ ref[1] }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
                     <div class="form-row">
                         <label class="form-label">Referencia *</label>
                         <input type="text" name="referencia" class="form-control" placeholder="Ingrese referencia" required>
@@ -518,7 +520,7 @@
 <script>
 
     const tipos = [
-        {% for ref in referencias %}
+        {% for ref in referencias_tipo %}
             { id: "{{ ref[0] }}", nombre: "{{ ref[1] }}" },
         {% endfor %}
     ];
